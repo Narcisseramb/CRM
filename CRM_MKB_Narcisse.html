@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Prospection — MKB Logistics</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#F1F5F9;color:#0F172A;font-size:13px}
+  .header{background:#0F172A;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .header-left{display:flex;align-items:center;gap:14px}
+  .logo{font-size:22px;font-weight:700;color:#3B82F6;letter-spacing:-0.5px}
+  .logo span{color:#fff;font-weight:300;font-size:14px;letter-spacing:1px;display:block}
+  .header-title{color:#94A3B8;font-size:13px}
+  .header-right{color:#64748B;font-size:12px;text-align:right}
+  .main{padding:20px 24px}
+  .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+  .stat{background:#fff;border-radius:10px;padding:12px 14px;text-align:center;border:1px solid #E2E8F0}
+  .stat-n{font-size:24px;font-weight:600}
+  .stat-l{font-size:11px;color:#64748B;margin-top:3px}
+  .controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+  .controls input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A}
+  .controls input[type=text]:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+  .controls select{padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A;cursor:pointer}
+  .btn-add{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn-add:hover{background:#2563EB}
+  .count{font-size:12px;color:#64748B;margin-bottom:8px}
+  .tbl-wrap{background:#fff;border-radius:12px;border:1px solid #E2E8F0;overflow:hidden}
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  thead{background:#F8FAFC}
+  th{padding:10px 12px;text-align:left;font-weight:600;font-size:11px;color:#64748B;border-bottom:1px solid #E2E8F0;white-space:nowrap;cursor:pointer;user-select:none;text-transform:uppercase;letter-spacing:.04em}
+  th:hover{color:#0F172A;background:#F1F5F9}
+  td{padding:8px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle;word-break:break-word}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#F8FAFC}
+  .co-name{font-weight:600;color:#0F172A;font-size:13px}
+  .co-region{font-size:10px;font-weight:500;padding:1px 6px;border-radius:20px;margin-left:5px;vertical-align:middle}
+  .rqc{background:#EFF6FF;color:#1D4ED8}.ron{background:#F0FDF4;color:#166534}
+  .rnb{background:#FFF7ED;color:#C2410C}.rns{background:#F5F3FF;color:#5B21B6}
+  .rab{background:#FEF9C3;color:#854D0E}.rbc{background:#ECFDF5;color:#065F46}
+  .rusa{background:#FEF3C7;color:#92400E}
+  .contact-name{font-size:12px;color:#0F172A}
+  .contact-title{font-size:11px;color:#94A3B8}
+  .phone a{color:#2563EB;text-decoration:none;font-weight:500;font-size:12px}
+  .phone a:hover{text-decoration:underline}
+  .addr{font-size:11px;color:#64748B;line-height:1.4}
+  .note-cell{font-size:11px;color:#64748B;word-break:break-all}
+  .badge{display:inline-block;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap;margin-top:3px}
+  .b-new{background:#DBEAFE;color:#1D4ED8}.b-called{background:#DCFCE7;color:#166534}
+  .b-hot{background:#FEF3C7;color:#92400E}.b-rdv{background:#D1FAE5;color:#065F46}
+  .b-follow{background:#EDE9FE;color:#5B21B6}.b-ko{background:#FEE2E2;color:#991B1B}
+  .status-sel{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;cursor:pointer;color:#0F172A;width:100%;margin-bottom:3px}
+  .date-inp{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;color:#0F172A;width:100%}
+  .btn-action{background:none;border:1px solid #E2E8F0;border-radius:6px;cursor:pointer;padding:3px 7px;font-size:11px;margin:1px}
+  .btn-edit{color:#2563EB}.btn-edit:hover{background:#EFF6FF;border-color:#BFDBFE}
+  .btn-del{color:#EF4444}.btn-del:hover{background:#FEE2E2;border-color:#FECACA}
+  .empty{text-align:center;padding:3rem;color:#94A3B8;font-size:14px}
+  .col-co{width:17%}.col-ct{width:14%}.col-ph{width:11%}.col-ad{width:15%}.col-em{width:13%}.col-st{width:10%}.col-dt{width:8%}.col-no{width:8%}.col-act{width:4%}
+  /* MODAL */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+  .overlay.active{display:flex}
+  .modal{background:#fff;border-radius:14px;padding:26px;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto}
+  .modal-title{font-size:16px;font-weight:700;color:#0F172A;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+  .modal-title button{background:none;border:none;font-size:22px;cursor:pointer;color:#94A3B8;line-height:1}
+  .modal-title button:hover{color:#0F172A}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fg{display:flex;flex-direction:column;gap:4px}
+  .fg.full{grid-column:1/-1}
+  .fg label{font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.04em}
+  .fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid #CBD5E1;border-radius:7px;font-size:13px;color:#0F172A;background:#fff;font-family:inherit}
+  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+  .fg textarea{resize:vertical;min-height:56px}
+  .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #F1F5F9}
+  .btn-cancel{background:#F1F5F9;color:#64748B;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-cancel:hover{background:#E2E8F0}
+  .btn-save{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-save:hover{background:#2563EB}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div><div class="logo">MKB <span>LOGISTICS</span></div></div>
+    <div class="header-title">CRM Prospection — Narcisse Rambeloson</div>
+  </div>
+  <div class="header-right">The Express Moment<br><span id="date-header"></span></div>
+</div>
+<div class="main">
+  <div class="stats-row" id="stats"></div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍  Rechercher entreprise, contact, ville, email...">
+    <select id="filter-status">
+      <option value="">Tous les statuts</option>
+      <option value="Nouveau">Nouveau</option>
+      <option value="Appelé">Appelé</option>
+      <option value="Chaud">Chaud</option>
+      <option value="RDV">RDV confirmé</option>
+      <option value="Follow-up">Follow-up</option>
+      <option value="KO">Pas intéressé</option>
+    </select>
+    <select id="filter-region">
+      <option value="">Toutes régions</option>
+      <option value="QC">Québec</option>
+      <option value="ON">Ontario</option>
+      <option value="NB">N.-Brunswick</option>
+      <option value="NS">Nouvelle-Écosse</option>
+      <option value="AB">Alberta</option>
+      <option value="BC">C.-Britannique</option>
+      <option value="USA">États-Unis</option>
+    </select>
+    <button class="btn-add" onclick="openModal()">&#43; Ajouter un prospect</button>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th class="col-co" onclick="sortBy('company')">Entreprise ↕</th>
+        <th class="col-ct">Contact</th>
+        <th class="col-ph">Téléphone</th>
+        <th class="col-em">Email</th>
+        <th class="col-ad">Adresse</th>
+        <th class="col-st">Statut</th>
+        <th class="col-dt">Rappel</th>
+        <th class="col-no">Notes</th>
+        <th class="col-act">Actions</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL AJOUT / MODIFICATION -->
+<div class="overlay" id="overlay" onclick="closeIfBg(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modal-title-text">Nouveau prospect</span>
+      <button onclick="closeModal()" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg full"><label>Entreprise *</label><input type="text" id="f-company" placeholder="Nom de l'entreprise"></div>
+      <div class="fg"><label>Contact (nom)</label><input type="text" id="f-contact" placeholder="Prénom Nom"></div>
+      <div class="fg"><label>Titre / Poste</label><input type="text" id="f-title" placeholder="Dir. Logistique..."></div>
+      <div class="fg"><label>Téléphone</label><input type="text" id="f-phone" placeholder="514-555-0000"></div>
+      <div class="fg"><label>Email</label><input type="text" id="f-email" placeholder="contact@entreprise.com"></div>
+      <div class="fg"><label>Région</label>
+        <select id="f-region">
+          <option value="QC">Québec</option><option value="ON">Ontario</option>
+          <option value="NB">N.-Brunswick</option><option value="NS">Nouvelle-Écosse</option>
+          <option value="AB">Alberta</option><option value="BC">C.-Britannique</option>
+          <option value="USA">États-Unis</option>
+        </select>
+      </div>
+      <div class="fg"><label>Statut</label>
+        <select id="f-status">
+          <option value="Nouveau">Nouveau</option><option value="Appelé">Appelé</option>
+          <option value="Chaud">Chaud</option><option value="RDV">RDV confirmé</option>
+          <option value="Follow-up">Follow-up</option><option value="KO">Pas intéressé</option>
+        </select>
+      </div>
+      <div class="fg full"><label>Adresse</label><input type="text" id="f-address" placeholder="123 rue Industrielle, Montréal, QC"></div>
+      <div class="fg"><label>Date de rappel</label><input type="date" id="f-date"></div>
+      <div class="fg full"><label>Notes</label><textarea id="f-note" placeholder="Informations complémentaires..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" id="btn-save-modal" onclick="saveProspect()">&#43; Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('date-header').textContent = new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
+
+const RAW = [
+  {company:`Sonoscope`,contact:``,title:`Président /CEO`,phone:`450-670-1115`,email:``,address:`Longueuil, Quebec`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Normand Canada`,contact:``,title:``,phone:`888-881-7778`,email:``,address:`752 Olivier Road Levis, QC G7A 2N2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Les Aliments Dare Ltée`,contact:`Paul Flewwelling`,title:`District Manager`,phone:`(581) 443-5197 (514) 799-8971`,email:``,address:`2481 Kingsway Dr, Kitchener, ON N2C 1A6`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Les Aliments Krispy Kernels inc.`,contact:`Valerie Jalbert - President & General Manager`,title:`VP human resources`,phone:`418-658-4640`,email:``,address:`2620 rue Watt Québec (Qc) Canada G1P 3T5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Mortier en Trémis ABL`,contact:`Find info on Louis Leblanc`,title:``,phone:`866-831-2310`,email:``,address:`791 Ch.Industriel, Lévis, G7A 1B4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Délices de la Forêt Valli`,contact:``,title:``,phone:`450-443-0060`,email:``,address:`JJH8+63 Varennes, Quebec, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Techno-Solis Inc`,contact:`Robert Ortega - Vice President, Sales`,title:`Director, Research & Development`,phone:`450-678-2444`,email:``,address:`FHQ8+37 Saint-Hubert, Longueuil, QC, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Econoplastik inc.`,contact:`Vincent Mathieu - Director, Sales & Marketing`,title:``,phone:`418-653-6859`,email:``,address:`2390, boulevard Louis-XIV, #17 Québec, QC G1C 5Y8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Arancia Lighting`,contact:`L-Guillaume Dionne - President`,title:`President`,phone:`514-737-2726`,email:`guillaume.dionne@arancialighting.com`,address:`101 Rue Robert-McKenzie, Beauharnois, QC J6N 0N9, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Sivaco Quebec Galbacor`,contact:`Danielle Gosselin - Directeur
+ Dave Courage - Director, Operations`,title:`Vice President & General Manager`,phone:`800-361-2104`,email:`rnalli@sivaco.com`,address:`800 Rue Ouellette, Marieville, QC J3M 1P5, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Tritop Inc`,contact:`Len Bourgeois - President`,title:`Owner`,phone:`450-699-0220`,email:`len.bourgeois@tritop.net`,address:`299 Bd Industriel, Châteauguay, QC J6J 4Z2, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Portable winch Co`,contact:`David Palardy - Directeur de Prodcution`,title:`Director, DE Production`,phone:`819-563-2193`,email:`dpalardy@portablewinch.com`,address:`94VP+WG Sherbrooke, Quebec, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Maibec inc`,contact:`Jocelyn Doyon - Vice-président Chaîne D'Approvisionnemen`,title:`VP`,phone:`800-363-1930`,email:`jocelyn.doyon@maibec.com`,address:`PQRG+F7 Levis, Quebec, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Kimpex Inc`,contact:`Patrick Marsan - Director, DE LA Distribution`,title:`Director`,phone:`800-561-6461`,email:`patrick.marsan@kimpex.com`,address:`5355, St-Roch S.street Drummondville, QC J2E 0B4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe Goyette`,contact:`Félix Bouchard - Manager, Inventory`,title:``,phone:`450-773-9615`,email:``,address:`2825 Casavant Boulevard W. Saint-Hyacinthe (QC) J2S 7Y4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Venmar Ventilation Inc`,contact:`Find contact for Pierre Francou - Manager operations`,title:``,phone:`819-477-6226`,email:``,address:`J7QR+H7 Mississauga, Ontario, Canada`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`MJB Litho inc`,contact:`Find contact for Jocelyn Leclerc`,title:``,phone:`819-563-4522`,email:``,address:``,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Soucy International`,contact:`Find contact for Mathieu Asselin - Directeur supply chain`,title:``,phone:`819-474-9008`,email:``,address:`5450 Rue Saint-Roch Sud, Drummondville, Quebec J2B 6W3, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`R.Desautels Sports`,contact:`Can't find info on the management`,title:``,phone:`450-659-1255`,email:``,address:`620 Rue Lavoie, La Prairie, QC J5R 3A3, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`MLE Services Inc`,contact:`Marc Lessard - Rensponsable de logistique`,title:``,phone:`418-603-1826`,email:``,address:`840 Rue de Saint-Romuald, Saint-Romuald, QC G6W 5M6, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Labelink Products Inc`,contact:`Find contact for Stephen Bouchard`,title:``,phone:`800-786-1770`,email:``,address:``,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Standish Distribution Inc`,contact:``,title:``,phone:`819-875-3387`,email:``,address:`1025 Rue Pope, Cookshire-Eaton, QC J0B 1M0, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Agricle`,contact:`Danny Beaurgard - Responsable de logistique`,title:``,phone:`450-994-3130`,email:``,address:`1 Rue Industrielle, Sainte-Cécile-de-Milton, Quebec J0E 2C0, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Mono Serra Groupe`,contact:`Find contact info for Angelo Mastromonaco`,title:``,phone:`418-476-0725`,email:``,address:`731 Av. Newton, Québec, QC G1P 4C4, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Eddynet Inc`,contact:`Patrick Boisvert - Directeur des ventes`,title:``,phone:`866-444-2802`,email:``,address:`45 Rue Roux, Danville, QC J0A, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`H2O Innovation Inc`,contact:`Find contact for Frederic Dugre`,title:``,phone:`819-344-2288`,email:``,address:`201 1re Av, Ham-Nord, QC G0P 1A0, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Equipments Emily Canada`,contact:``,title:``,phone:`819-621-7882`,email:``,address:`118 Route 165 Sud, Sainte-Sophie d’Halifax Québec G0P 1L0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Futech Drummond Inc`,contact:``,title:``,phone:`819-477-1075`,email:``,address:`3168, boul. Industriel Laval QC H7L 4P7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Scies Mercier Inc`,contact:`Patrick Garant`,title:``,phone:`418-837-1417`,email:``,address:`8860, boulevard Guillaume-Couture Lévis (Québec) G6V 9H1 Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Super Remover`,contact:`Can't find info on management`,title:``,phone:`450-770-2948`,email:``,address:`619, rue du Luxembourg Granby (Quebec) J2J 2V2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`CG Hardwood Molding Inc.`,contact:`Find contact for Bastien Therrien`,title:``,phone:`418-228-7405`,email:``,address:`2200, 98E rue Saint-Georges (Quebec) G5Y 8J6 Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Maple leaf charcoal Inc`,contact:`Find contact for Karine Lapointe`,title:``,phone:`418-329-2977`,email:``,address:`168 Rang Sainte-Anne Nord Sainte-Christine d’Auvergne (Québec) G0A 1A0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Quinco & Cie`,contact:`Find contact for Elaine Paquin`,title:``,phone:`877-784-2733`,email:``,address:`2035 René-Patenaude, Magog, QC J1X 72J, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Batterie Natech`,contact:`Find contact for Patrick Alarie`,title:``,phone:`514-209-6763`,email:``,address:`337 Bd Industriel, Saint-Jean-sur-Richelieu, QC J3B 7M3, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`BGR Chemicals`,contact:`Terry Thibodeau`,title:``,phone:`514-630-3309`,email:``,address:`600 Delmar Ave. , Pointe-Claire, QC H9R 4A8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Sequoia Industries Inc`,contact:`Find contact for René Couture`,title:``,phone:`819-846-4480`,email:``,address:`2000, Route 222 Saint-Denis-de-Brompton (Québec) J0B 2P0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Granby Industries`,contact:`Claude Bougie - Directeur de Production
+ Pierre Fournier - President`,title:``,phone:`450-378-2334`,email:``,address:`98, rue des Industries, Cowansville, Québec J2K 0A1, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Univers Du Verres`,contact:`Christine Fillon - Vice presidente`,title:``,phone:`418-681-1824`,email:``,address:`4885 1ère Avenue, Québec, QC G1H 2T5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Scies BGR Inc`,contact:`Etienne St-Hilaire - Regional Manager`,title:``,phone:`418-832-2918`,email:``,address:`2341 avenue de la Rotonde Lévis, Quebec Canada G6X 2M2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Armeco Inc`,contact:`Abdulrazaq Tijjani - Senior Manager, Production & Planning`,title:``,phone:`418-871-8822`,email:``,address:`2800, Saint-Jean-Baptiste, bur. 180 Québec, QC G2E 6J5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Bois Expansion`,contact:`Marc Mc Gee - Superviseur Distribution Et Transport
+ Eric Bergevin - President, & DG`,title:``,phone:`800-959-6770`,email:``,address:`9750 St Laurent Blvd, Montreal, Quebec H3L 2N3, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`AGF Brome`,contact:`Find the contact for Eric Lepine`,title:``,phone:`450-263-5993`,email:``,address:`147 des Textiles Cowansville, Quebec Canada, J2K 3P8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Farinart`,contact:`Julie Theberge - GM`,title:``,phone:`450-793-2880`,email:``,address:`1150, Rang St-Edouard, St-Liboire, Quebec, Canada J0H 1R0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Valconcept`,contact:`Keven Roy - Director, DE LA Production`,title:``,phone:`581-702-3450 ext. 106`,email:``,address:`275 rang Gaspé ST-APOLLINAIRE (Québec) G0S 2E0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Echberg`,contact:`Helena Echberg - Presidente`,title:``,phone:`450-770-2600`,email:``,address:`2389 Route 202 Dunham, QC J0E 1M0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Waterco`,contact:`Rien de plus de mon cote`,title:``,phone:`450-748-1421`,email:``,address:`208-1380 rue Newton Boucherville, QC, J4B 5H2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Techlift`,contact:`Kevin Lecouffe - Branch Manager`,title:``,phone:`514-631-9884`,email:``,address:`525, Bd. Morgan, Baie-d'Urfé, (Québec) H9X 3T6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Alpha Tabco Inc`,contact:`Rien de plus de mon cote`,title:``,phone:`450 293-3017`,email:``,address:`69, rue Jacques-Cartier Nord Farnham (Québec) J2N 1Z3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`PVC Architectural`,contact:`Richard Breton - Director, DE Production`,title:``,phone:`418-881-2286`,email:``,address:`220 rue Industrielle St-Apollinaire (Québec) G0S 2E0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Bois Ouvre Waterville`,contact:`Claude Libersan - Chef D'éQuipe - Opérateur`,title:``,phone:`819-837-2698`,email:``,address:`525, rue Principale Nord, Waterville (Québec) J0B 3H0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Acier Hydraulique Inc`,contact:`Donald Tardif - Président`,title:``,phone:`418-878-5711`,email:``,address:`173, rue de Liverpool Parc industriel, Saint-Augustin Québec G3A 2C8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Durpro Ltee`,contact:`Thierry St-Victor - Director`,title:``,phone:`800-850-5035`,email:``,address:`255 Montcalm Nord Blvd. Candiac QC J5R 3L6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Polyform`,contact:`Danielle Béliveau`,title:`Vice-présidente exécutive`,phone:`450-378-9093`,email:`dbeliveau@polyform.com`,address:`454, rue Édouard Granby (Québec) J2G 3Z3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Emco Corporation`,contact:`Meenakshi Jain`,title:`Vice President, Human Resources`,phone:`418-681-4671`,email:`meenakshi@emcoindia.com`,address:`1507 rue du Chinook Québec Quebec G2K 0M7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Bibby Ste-Croix`,contact:`Peter Crofton`,title:`Vice President and General Manager`,phone:`418-926-3262 ext 2216`,email:`peter.crofton@bibby-ste-croix.com`,address:`6200, Principale Street Ste-Croix, Quebec G0S-2H0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Sinope Technologies`,contact:`Nyzar Raouchi`,title:`Director, DE Production & Manager`,phone:`450-741-7700`,email:`nyzar.raouchi@sinopetech.com`,address:`705, avenue Montrichard Saint-Jean-sur-Richelieu QC J2X 5K8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`EcoloPharm`,contact:`Sandrine Milante`,title:`Présidente et CEO`,phone:`450-447-6307`,email:`smilante@ecolopharm.com`,address:`8100, Samuel Hatt, Chambly (Quebec), J3L 6W4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Gelpac`,contact:`Sylvain Désilets`,title:`Director, DE Production`,phone:`450-460-4466`,email:`sdesilets@gelpac.com`,address:`400 Henri-Bourassa Street, Marieville, QC J3M 1R9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Multi Brosses`,contact:`Emmanuel Cham`,title:`Business Development Director`,phone:`418-397-1870`,email:`emmanuel.champagne@multibrosses.com`,address:`300, rue Principale Saint-Jules (Quebec) G0N 1R0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Battelec`,contact:`Marcel Lagacé`,title:`Chief Executive Officer`,phone:`450-348-2291`,email:``,address:`800 rue Croisetière St-Jean-sur-Richelieu Québec J2X 4H7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Marche Reneissance Inc`,contact:`Find info on management`,title:``,phone:`819-447-2050`,email:``,address:`397, 2nd Street Daveluyville, QC G0Z 1C0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Machinage Piché inc.`,contact:`Sylvie Laurendeau`,title:`Senior Vice President`,phone:`819-367-3333`,email:`laurendeaus@picheinc.com`,address:`414, rue Industrielle Daveluyville (Québec) G0Z 1C0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Plasrec`,contact:`Find info on management`,title:``,phone:`450-263-6341`,email:``,address:`205 Boul Grand N, Cowansville, Quebec J2K 3R8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Amico`,contact:`Navdeep Jassi`,title:`Vice President, Engineering`,phone:`450-545-4613`,email:`navjassi@yahoo.com`,address:`900 Pierre-Caisse Saint-Jean-sur-Richelieu, QC J3B 7Y5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Chocolat Lamontagne`,contact:`Philippe Jolicoeur`,title:`Director, Des Finances`,phone:`800-567-3435`,email:``,address:`4045 Garlock, Sherbrooke, QC, J1L 1W9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Elkem Metal Canada`,contact:`Find info on management`,title:``,phone:`418-549-9917`,email:``,address:`2020 Chem. de la Réserve, Chicoutimi, QC G7J 0E1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Industries Plastipak Inc.`,contact:`Marceric Thibault`,title:`Vice President, Operations`,phone:`450-650-2200`,email:`marc-eric.thibault@plastipak.ca`,address:`150 Boul. Industriel Boucherville, QC J4B 2X3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Vexco`,contact:`Eric Vigneault`,title:`PDG`,phone:`819-362-3233`,email:`eric.vigneault@vexco.com`,address:`289, Route 165 Sud, C.P. 95 Plessisville (Québec) G6L 2Y6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Itek Industries`,contact:`Find info on management`,title:``,phone:`418-562-0699`,email:``,address:`95 rue Brillant Matane, Québec G4W 0J8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Pro Serigraphie`,contact:`Find info on company`,title:``,phone:`418-227-2990`,email:``,address:`825, 98e Rue Saint-Georges, Québec G5Y 8G2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Ateliers BG`,contact:`Martin Gobeil`,title:`Owner`,phone:`819-346-2195 ext.110`,email:`martingobeil@ateliersbg.com`,address:`2980 rue King Est, Sherbrooke, QC J1G 5J2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Delta Marketing Inc`,contact:`Emilie St-laurent`,title:`Manager`,phone:`450 444-4242 Ext.256`,email:`emilie@deltamarketing.ca`,address:`9625-A Rue Ignace Brossard, Québec J4Y 2P3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Doman Building Materials Group Ltd.`,contact:`Michel Walsh`,title:`Director`,phone:`(514) 966-1510`,email:`michel.walsh@canwel.com`,address:``,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Dolbec International`,contact:`Ginette Blouin`,title:`Directrice générale, VP Logistique et Opérations`,phone:`418-688-9115`,email:`gblouin@dolbec-intl.ca`,address:`361, rue des Entrepreneurs Québec G1M 1B4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Sitraco`,contact:`Leonard Gagnon`,title:`Director, Business Development`,phone:`418-397-6851`,email:`leonard.gagnon@sitraco.com`,address:`260 Rue du Parc, Saint-Joseph-de-Beauce, QC G0S 2V0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Cadre Urbaine`,contact:``,title:``,phone:`450-655-2020`,email:``,address:`1351-K rue Ampère Boucherville Québec J4B 5Z5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Sanfacon Industries`,contact:`Find info on management`,title:``,phone:`418-839-1370`,email:``,address:`1980 5e Rue Lévis, QC G6W 5M6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Centura`,contact:`Maria Mavrostomos`,title:`Director, Marketing`,phone:`418-653-5267`,email:`mariam@cbinc.com`,address:`2850, rue Jean-Perrin, QC G2C 2C8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Acema Importations Inc`,contact:`Find info on management`,title:``,phone:`450-646-2591`,email:``,address:`2616, Boulevard Jacques-Cartier Est, Longueuil (Québec) J4N 1P8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Domtar Inc`,contact:`Brian Prosser`,title:`Manager, Production`,phone:`514-848-5555`,email:`bprosser@laminacorr.com`,address:`395 de Maisonneuve Blvd West Montreal, QC H3A 1L6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Faucher Industries`,contact:`Find info on management`,title:``,phone:`877-232-8243`,email:``,address:`6363 des Grandes-Prairies Blvd. Montreal, Quebec H1P 1A5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Imprimerie Dumaine Inc`,contact:`Catherine Martin`,title:`Project Manager`,phone:`450-774-3536`,email:`cmartin@imprimeriedumaine.com`,address:`5350, Ave Trudeau, Saint-Hyacinthe, Quebec J2S 7Y8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Law Marot Milpro`,contact:`Mario Nadeau`,title:`Technical Director`,phone:`450-771-6262`,email:`mnadeau@lmmequip.com`,address:`1150 Rue Brouillette, Saint Hyacinthe, Quebec, J2T 2G8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Abzac Group`,contact:`Franck Espaillard`,title:`Director, Des Operations & Chief Operating Officer`,phone:`502-354-4411`,email:`f.espaillard@abzac.com`,address:`23 Caristrap St, Bowmanville, ON L1C 3T6`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Topring`,contact:`Mylène Blais`,title:`Director, Service Client Ventes Internes`,phone:`450-375-1828`,email:`mblais@topring.ca`,address:`1020 Boul Industriel Granby Quebec J2J 1A4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Donat Thériault Ltée`,contact:`Find info on management`,title:``,phone:`506-735-1860`,email:``,address:`580 Rue Victoria, Edmundston, NB E3V 3N1`,region:`NB`,note:``,status:"Nouveau",date:""},
+  {company:`Qualiplast`,contact:`Find info on SAMUEL PAGÉ-MORIN`,title:``,phone:`450-371-7000`,email:``,address:`490 Hébert Street Salaberry-de-Valleyfield, Quebec J6S 2B4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Columbex`,contact:`Find info on management`,title:``,phone:`450-449-9444`,email:``,address:`900 Hérelle, Longueuil, Québec J4G 2M8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Innotex`,contact:`Roy René-Frédéric`,title:`Vice President, Finance`,phone:`819-826 5993`,email:`rene-frederic.roy@innotexprotection.com`,address:`275 Gouin Street Richmond, Quebec J0B 2H0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Boralex inc`,contact:`Find info on management`,title:`President & Chief Executive Officer`,phone:`819-363-6363`,email:`patrick.decostre@boralex.com`,address:`36, rue Lajeunesse Kingsey Falls, Québec J0A 1B0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Compagnie Motoparts Inc.`,contact:`Nathalie Grève`,title:`Accounts Payable`,phone:`819-362-7345`,email:`nathalie.greve@ciemotoparts.com`,address:`1124, rue St-Calixte Plessisville, QC G6L 1N8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe Maska Inc`,contact:`Find info on management`,title:`branch manager`,phone:`450-773-7471`,email:`ebilodeau@groupemaska.com`,address:`550 Av. Vaudreuil, Saint-Hyacinthe, QC J2S 4H2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Produit Hevea Inc`,contact:`Roxane Deslauriers`,title:`Director`,phone:`888-826-5955`,email:`roxane@produitshevea.com`,address:`380, 10e Avenue Sud Richmond, QC J0B 2H0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Laboratoire Du-Var`,contact:`Christine Fiani`,title:`Vice President`,phone:`450-641-4740`,email:`cfiani@du-var.com`,address:`1460 rue Graham-Bell Boucherville, QC J4B 6H5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Termaco Ltée`,contact:`Find info on Mathieu Roy`,title:``,phone:`800-363-1964`,email:``,address:`325 Bd Industriel, Saint-Jean-sur-Richelieu, QC J3B 7M3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Filtrindustries Ltée`,contact:`François Campagn`,title:`General manager`,phone:`418-832-1415`,email:``,address:`104-1840, 1e rue Lévis, Québec G6W 5M6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Surplec Inc.`,contact:`Pierre Parent`,title:`Director`,phone:`877-996-3636`,email:`pierreparent@surplec.com`,address:`149 Chem. Godin, Sherbrooke, QC J1R 0S6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Texel Geosol`,contact:`Andre Rheaume`,title:`Financial Director`,phone:`800-463-8929`,email:`arheaume@lydall.com`,address:`160 Bd Industriel, Boucherville, QC J4B 2X3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Terraquavie`,contact:`Dominic Diorio`,title:`PDG`,phone:`819-846-3880`,email:`d.diorio@terraquavie.com`,address:`6838 boul. Bourque, Sherbrooke QC J1N 1H2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe Bernières inc`,contact:`Karl McLellan`,title:`Vice-président`,phone:`418-684-2420`,email:`kmclellan@bernieres.ca`,address:`1721 A.-R.-Décary Street, Quebec G1N 3Z7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`JC FIBERS Inc.`,contact:`Frank Colubriale`,title:`Associé Principal - Managing Partner`,phone:`450-359-4545`,email:`fcolubriale@jcfibers.com`,address:`3718 Grande Ligne, Chambly, Québec, J3L 4A7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Dominion & Grimm`,contact:`Stéphane Pepin`,title:`Vice President`,phone:`514-351-3000`,email:`spepin@dominiongrimm.ca`,address:`8250 Rue Marconi, Anjou, QC H1J 1B2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Phaneuf Équipements Agricoles`,contact:`Jimmy Labbé`,title:`Director`,phone:`450-549-5811`,email:``,address:`292, rue Principale Upton (Québec) J0H 2E0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Compass Minerals Canada Corp.`,contact:`Jenny Hood - CHIEF SUPPLY CHAIN OFFICER`,title:``,phone:`902-667-3388`,email:``,address:`327 Smith Road Nappan, Nova Scotia B4H 3Y4`,region:`NS`,note:``,status:"Nouveau",date:""},
+  {company:`Flocor`,contact:`Tom Murray - Vice President and General Manager`,title:``,phone:`514-342-2100`,email:``,address:`470 Seaman Street Stoney Creek, ON, L8E 2V9`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Ferme Vifranc Inc`,contact:`Kevin Pelletier`,title:`Owner & CEO`,phone:`418-356-3312`,email:``,address:`163, Petit rang du Nord, St-Pamphile, QC G0R 3X0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Matiss Inc`,contact:`Carl Brissette`,title:`Director`,phone:`418-227-9141`,email:`carl.brissette@matiss.com`,address:`8800 25th Avenue Saint-Georges, Quebec G6A 1K5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`OSI Machinerie Inc`,contact:`Hugues Beaudry`,title:`General manager`,phone:`418-228-6868`,email:`hugues@osimachine.qc.ca`,address:`2510, 98e Rue, Saint-Georges, QC G6A 1E4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Camemat Inc`,contact:`Michel Cadieux`,title:`President`,phone:`844-261-9196`,email:``,address:`6455 W. Boulevard Laurier St-Hyacinthe, Qc J2S 9A5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe Picard`,contact:`Jean-denis Perron`,title:`General manager`,phone:`418-834-8300`,email:`jeandenisperron@groupepicard.ca`,address:`3000, rue de l’Etchemin Lévis (Québec) G6W 7X6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Eurodib`,contact:`Alexandre Dumaine`,title:`Vice President Business Development`,phone:`450-641-8700`,email:`alex@eurodib.com`,address:`120 Rue de la Barre, Boucherville, QC J4B 2X7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`CG AIR SYSTÈMES INC.`,contact:`Dominique Ciechanowski`,title:`Executive Vice President`,phone:`418-935-7075`,email:``,address:`207, rue Industrielle, Sainte-Marguerite Québec G0S 2X0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Gestion Industrielle RB Inc`,contact:`Marc Lefebvre`,title:`Sales Representative`,phone:`450-632-3230`,email:`marcl@grbbearings.com`,address:`6200 boul Saint-Laurent Sainte-Catherine, Québec J5C 1B2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Vitrerie Longueuil`,contact:`Jonathan Robert`,title:`General manager`,phone:`450-651-0900`,email:`jonathan.robert@vitrerielongueuil.com`,address:`241 Chemin du Coteau-Rouge Longueuil, Quebec J4J 1X1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Novapex Technologies`,contact:`Richard Cadieux`,title:`Director`,phone:`877-379-3962`,email:`richard.cadieux@novapex.ca`,address:`745 Chemin du Grand Bernier N #10, Saint-Jean-sur-Richelieu, QC J3B 8H7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`The Maple Treat`,contact:`Jinny Lok`,title:`Senior Director, Sales& Marketing`,phone:`450-777-4464 ext 7801`,email:`jlok@themapletreat.com`,address:`4026 Notre-Dame Street East, Montreal, Quebec H1W 2K3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Spec-Dor`,contact:`Alexander Timoschuk`,title:`President`,phone:`450-359-1881`,email:`alexander@specdor.com`,address:`390 St-Louis St-Jean-Sur-Richelieu, Qc, J3B 1Y4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Bulle Groupe Inc`,contact:`Valérie Doran`,title:`CEO and Founder`,phone:`NA`,email:``,address:`66 Bd Champlain, QC G1K 4H7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`SGC Products Inc.`,contact:`Maxime V.`,title:`Président`,phone:`877-333-7081`,email:``,address:`5461 Timberlea Boulevard, Mississauga, Ontario, L4W 2T6`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Corbec Corp`,contact:`Marc Burrows`,title:`Vice President`,phone:`800-463-8313`,email:`mburrows@corbec.com`,address:`50 Rue Lisbonne, Saint-Augustin-de-Desmaures, QC G3A 0M6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Duvaltex Corp`,contact:`Martin Bourque`,title:`Vice-Président`,phone:`877-227-9897`,email:`sonia.atton@duvaltex.com`,address:`1035 ave Wilfrid-Pelletier Suite 310 Quebec City, Quebec G1W 0C5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`FIT Hardware Solutions`,contact:`Peter Vescio`,title:`Client Relations Manager`,phone:`819-366-3484`,email:``,address:`1300 55e Avenue, Lachine, QC H8T 3J8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Rechapage 2000 Inc`,contact:`Dany Cormier`,title:`president`,phone:`418-774-2000`,email:``,address:`112, 181e rue, Parc Industriel Beauceville (Québec) G5X 2S8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Fabridor Inc`,contact:`Chantale Clavelle`,title:`Director`,phone:`819-565-3663`,email:`c.clavelle@fabridor.com`,address:`3575 Boulevard Industriel Sherbrooke (Quebec) J1L 1X7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Primewood Lumber Inc`,contact:`Jean-Francois Audet`,title:`Lumber Buyer at Primewood`,phone:`819-478-7721`,email:``,address:``,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`MGH Royflex Inc`,contact:`Find info on management`,title:``,phone:`418-426-3041`,email:``,address:`19, des Érables Street Tring-Jonction (Québec) G0N 1X0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Dolbeau Oxygene`,contact:`Find info on management`,title:``,phone:`418-276-0555`,email:``,address:`303, 8e Avenue Dolbeau-Mistassini (Québec) G8L 1Z6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Avjet Holding Inc`,contact:`Richard Légaré`,title:`Director, Operations`,phone:`819-479-1000`,email:`rlegare@avjet.ca`,address:`900 boul. Lemire Drummondville (Québec) J2C 7W8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Decking Beauce`,contact:`Find info on management`,title:``,phone:`418-774-3658`,email:``,address:`373, 110e Rue, Beauceville (Québec) G5X 3B3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`DLL Inc`,contact:`Annie Leblanc`,title:`Vice Présidente, Associée`,phone:`450-346-7044`,email:`aleblanc@dllinc.com`,address:`370 Saint-Louis Street Saint-Jean-sur-Richelieu (Quebec) J3B 1Y4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Proslat Canada`,contact:`Eric Letham`,title:`President & Chief Executive Officer`,phone:`450-691-2944`,email:`eric@proslat.com`,address:`5559 Av. Pierre-Dansereau, Salaberry-de-Valleyfield, QC J6S 0M1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Pierre Delorme`,contact:`Pierre Delorme`,title:`Opération manager`,phone:`450-642-1227`,email:`pierre.delorme@heidelbergmaterials.com`,address:`210, rue Bonin Acton Vale (Québec) J0H 1A0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`GILLESPIE MUNRO INC.`,contact:`Deborah Bosley`,title:`Vice- Presedent`,phone:`514-871-1033`,email:`dbosley@gmunro.ca`,address:`740 Notre-Dame Street W., Suite 1120 Montreal, Quebec. H3C 3X6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Decor Expperts Expo`,contact:`Fabienne Séguin`,title:`Director`,phone:`450-646-2251`,email:``,address:`778 rue Jean-Neveu, Longueuil, QC J4G 1P1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Fabrications Trémex inc.`,contact:`Find info on management`,title:``,phone:`418-935-7150`,email:``,address:`247, rue de la Meunerie, Sainte-Marguerite, (Beauce) Québec, G0S 2X0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Transcontinental inc.`,contact:`Donald LeCavalier`,title:`Vice-président`,phone:`514-954-4000`,email:`donald.LeCavalier@tc.tc`,address:`1 Place Ville Marie Suite 3240 Montréal, Québec H3B 0G1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Bercomac Limitee`,contact:`Guillaume Labbe`,title:`Director`,phone:`877-772-3726`,email:`guillaume.labbe@bercomac.com`,address:`92, Fortin Nord Adstock, Québec, Canada G0N 1S0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Morstowe sales International ltd.`,contact:`Jason Flynn`,title:`President`,phone:`450-923-3122`,email:`jflynn@morstowe.com`,address:`7400, BLVD. TASCHEREAU, SUITE 105A BROSSARD, QC J4W 1M9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Pixel & Scie inc`,contact:``,title:``,phone:`514-648-3999`,email:``,address:`690 boulevard Guimond, Longueuil (Québec), J4G 1T5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Landry Flexible Packaging`,contact:`Alain Lefebvre`,title:`GM`,phone:`450-460-4849`,email:`alefebvre@landryflexpack.com`,address:`1280 Theberge, Marieville, Quebec, J3M 1B3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`North American Cabinets`,contact:`STEPHANE FORTIER`,title:`Président`,phone:`819-875-2424`,email:``,address:`705 rue Pope Cookshire-Eaton (Québec) J0B 1M0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`GROUPE MULTI DISTRIBUTION INC.`,contact:`Christopher Gagne`,title:`Président`,phone:`450-777-7978`,email:`cgagne@gmdistribution.ca`,address:`788, rue Moeller Granby (Québec) J2G 8L1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`MULTI LUMINAIRE QUÉBEC`,contact:`Mathieu Bujold`,title:`Vice-Président`,phone:`418-527-9991`,email:`m.bujold@multiluminaire.ca`,address:`5749, boul. des Galeries Québec, Qc G2K 1X1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Incognito distribution`,contact:`Find info on management`,title:``,phone:`450-857-1800`,email:``,address:`120 boul. industriel Boucherville, Qc J4B 2X2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Geo. Sheard Fabrics Ltd.`,contact:`Iskender Sheard`,title:`President`,phone:`819-849-6311`,email:`isheard@geosheard.com`,address:`84 Merrill St. Coaticook QC J1A 1X4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Les Aspirateurs Dany Bellavance Inc.`,contact:``,title:``,phone:`819-563-3374`,email:``,address:`1089, Rue du Conseil, Sherbrooke, QC, Canada`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Emballages Citadins`,contact:`Hugo Despres`,title:`Concepteur - Adjoint à la gestion`,phone:`450-658-8313`,email:`hugo@emballages-citadins.com`,address:`8100, boul. Industriel, Chambly, QC, J3L 4X3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Machinerie Serge Lemay Inc.`,contact:``,title:``,phone:`819-358-4800`,email:``,address:`6, Rang 2, Warwick, Québec JOA 1M0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Axter AgroScience`,contact:`Dean Jones`,title:`Sales Manager`,phone:`450-464-5755`,email:`dean.jones@axter.ca`,address:`895 Chem. Benoît, Mont-Saint-Hilaire, QC J3G 4S6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Granby Industries`,contact:`Brian Cullity`,title:`Vice President, Sales & Marketing`,phone:`450-378-2334`,email:`bcullity@granbyindustries.com`,address:`98, rue des Industries, Cowansville, Quebec J2K 0A1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Memprotec Inc`,contact:`Jean Simard`,title:`Technical Director`,phone:`819-382-2244`,email:`jean.simard@memprotec.com`,address:`5133, de la Plaisance Chesterville QC G0P 1J0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`FPCoiner`,contact:``,title:``,phone:`514-219-1180`,email:``,address:`953 De Beauvoir Repentigny, QC J5Y 3V1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Beauchamp International`,contact:`Hélène Beauchamp`,title:`Executive Director`,phone:`450-321-0566`,email:`helene@beauchamp2007.com`,address:`9655K rue Ignace Brossard (Québec) J4Y 2P3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Solex Corporation Internationale`,contact:`Jacques Vandelac`,title:`Owner`,phone:`514-400-8961`,email:`jvandelac@solexcorpintl.com`,address:`830 Rue Delage, Longueuil, Québec J4G 2V4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Gelpac`,contact:`Luc Ravenelle`,title:`Vice-Président Ventes et Marketing`,phone:`450-460-4466`,email:`lravenelle@gelpac.com`,address:`400 Henri – Bourassa Street, Marieville, QC J3M 1R9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Lambert`,contact:`Find info on management`,title:``,phone:`418-852-2885`,email:``,address:`106, chemin Lambert, Rivière-Ouelle (Québec) G0L 2C0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`ALU-REX INC`,contact:`Kevin Brochu`,title:`Vice-président opérations`,phone:`418-832-7632`,email:`kevin.brochu@alu-rex.com`,address:`2180, avenue de la Rotonde Lévis (Québec) G6X 2L8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Anco Chemicals Inc`,contact:`Tony Roehrig`,title:`President`,phone:`450-632-0950`,email:`troehrig@ancochemicals.com`,address:`6905 Boul Hebert, Ville Ste-Catherine, Quebec J5C 1B5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Atlas Médic`,contact:`Nancy Ouellet`,title:`Executive Director`,phone:`418-878-4487`,email:`aouellet@atlasmedic.com`,address:`Atlas Médic, 80 rue de Sydney, St-Augustin-de-Desmaures, Québec G3A 0P3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Premier Wire`,contact:`Nelson Lafond`,title:`Manager, Sales & Production Coordinator & Sales & Production`,phone:`450-447-2992`,email:``,address:`2550 Boul Industriel, Laval, QC H7S 2G7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe BMR`,contact:`Alexandre Lefebvre`,title:`Chief Executive Officer`,phone:`450-655-2441`,email:``,address:`1501, rue Ampère, Bureau 200 Boucherville, (Québec) J4B 5Z`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`CV Plastics International`,contact:`Joey De Spirito`,title:`Customer Service and Shipping`,phone:`877-679-0688`,email:``,address:`103 Rue Baillargeon, Châteauguay, QC J6J 4Z2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`MATÉLEVAGE`,contact:`Find info on management`,title:``,phone:`418-728-5258`,email:``,address:`643 route du Président-Kennedy Lévis, Québec G6C 1J7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Multi Electronique`,contact:`Charles Massicotte`,title:`President`,phone:`418-724-5835`,email:`cmassicotte@multi-electronique.com`,address:`352 rue Alcide C. Horth, suite 201, Rimouski, QC, G5M 0W6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Doucet Inc`,contact:`Pascal Doucet`,title:`Vice President, Sales`,phone:`819-367-2633`,email:`pascald@doucetinc.com`,address:`340, 6e Rue, Daveluyville (Quebec) G0Z 1C0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Qualtech`,contact:`Andre Giguere`,title:`President`,phone:`418-686-3802`,email:`andre.giguere@qualtech.ca`,address:`1840 Rue Michelin, Laval, QC H7L 4R3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Megasecur`,contact:`Carole Pelletier`,title:`Vice President`,phone:`819-751-0222`,email:`carole.pelletier@megasecur.com`,address:`940-A, boulevard Pierre-Roux Est Victoriaville (Québec) G6T 2H6`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Wiptec International`,contact:`Nadine Paquet`,title:`Director, Finance`,phone:`819-564-7117`,email:`nadine.paquet@wiptec.ca`,address:`3160 Boulevard Industriel, Sherbrooke, QC J1L 1V8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Natart Juvenile`,contact:`De Antonio`,title:`President`,phone:`819-364-3189`,email:``,address:`289 blvd. Baril Ouest Princeville, QC G6L 3V8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`NRC Industries Inc`,contact:`Cédric Mailloux`,title:`Parts & Service manager`,phone:`450-379-5796`,email:``,address:`2430 Rue Principale Saint-Paul-d'Abbotsford Québec J0E 1A0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Deschamps Impression`,contact:`Jean Deschamps`,title:`President`,phone:`418-667-3322`,email:`jd@deschampsimp.com`,address:`755, boulevard des Chutes Québec, (QC), G1E 2C2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Venmar Ventilation ULC`,contact:`Stéphanie Lacroix`,title:`Director, Marketing & Product Kitchen Ventilation (N-A)`,phone:`819-477-6226`,email:`lacroixs@venmar.ca`,address:`550, Lemire Blvd, Drummondville (Quebec) J2C 7W9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Solitek Inc`,contact:`Find info on management`,title:``,phone:`613-234-1421`,email:``,address:`275 Slater st, office 900, Ottawa, Ontario K1P 5H9`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Industek Inc`,contact:`Daniel Hebert`,title:`Director, Du Service`,phone:`844-352-9222`,email:`daniel.hebert@industek.ca`,address:`200, rue François-Bourgeois Victoriaville, Québec, G6T 2G8`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Protomach GML`,contact:``,title:``,phone:`819-364-7270`,email:``,address:`110 Rue Industrielle, St-Louis-de-Blandford, Québec G0Z 1B0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Groupe Sabec`,contact:`Michael Boudreault`,title:`Financial Controller`,phone:`418-549-4087`,email:`mboudreault@sabec.ca`,address:`1321, Rue de la Manic, Chicoutimi, Québec G7K 1G7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`THETFORD ARMATURE`,contact:``,title:``,phone:`418-335-3405`,email:``,address:`880, Boulevard Frontenac Ouest, Thetford-Mines, Québec G6G 6K3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Plastube`,contact:`Patrick Lemay`,title:`Vice-président opérations`,phone:`450-378-2633`,email:`patrick.lemay@plastube.com`,address:`590 , rue Simonds Sud Granby, ( Québec ) J2J 1E1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`J.A. Roby`,contact:`Eddy Guérin`,title:`President`,phone:`418-849-8095`,email:`eguerin@jaroby.com`,address:`490, rue de l'Argon Québec, (Québec) G2N 2C9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Barrette Wood`,contact:`Frederic Frigon`,title:`General manager`,phone:`450-357-7000`,email:`frederic.frigon@ebarrette.com`,address:`583 Grand-Bernier Road North, Saint-Jean-sur-Richelieu, Québec J3B 8K1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Équipements Lacasse et fils inc`,contact:`Find info on management`,title:``,phone:`418-885-4754`,email:``,address:`535, route Bégin, St-Anselme (Qc) G0R 2N0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Strongco Equipment`,contact:`Oliver Nachevski`,title:`President and Chief Executive Officer`,phone:`905-670-5100`,email:``,address:`1640 Enterprise Road, Mississauga ON L4W 4L4`,region:`ON`,note:``,status:"Nouveau",date:""},
+  {company:`Boomerang tools`,contact:`Stephane Rodrigue`,title:`Entrepreneur`,phone:`450-463-1759`,email:`stephan.rodrigue@boomerangtools.com`,address:`1500-D Nobel, Boucherville, QC J4H 5B3`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Attraction Inc`,contact:`Lucile Poteau`,title:`Director, DE Production`,phone:`800-567-6095`,email:``,address:`672, rue du Parc, Lac-Drolet QC G0Y 1C0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Caron et fils – Échangeurs de chaleur`,contact:`Caron DeVita`,title:`President`,phone:`819-849-3015`,email:`caron@quicksilvercanada.com`,address:`4, route 147 Coaticook, Québec J1A 2S2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`RONA Châteauguay`,contact:`Find info on management`,title:``,phone:`450-691-3739`,email:``,address:`41, boul. St-Jean-Baptiste, Châteauguay, Québec, J6J 3H5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Macpek Inc`,contact:`Huguette Bilodeau`,title:`Vice-Présidente Finances`,phone:`418-659-1144`,email:`hbilodeau@macpek.com`,address:`2970, avenue Watt Quebec G1X 4P7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Chidaca Inc`,contact:`Find info on management`,title:``,phone:`450-659-7788`,email:``,address:`8888 boulevard du Quartier, Brossard, Qc`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`LabSphere Inc`,contact:`Serdar Arslan`,title:`Owner`,phone:`450-444-0085`,email:`s.arslan@bosphore.ca`,address:`1535 Nelligan Saint-Bruno, Quebec J3V-2V2`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Atelier AP Fortier`,contact:`André Fortier`,title:`Proprietor`,phone:`418-807-3355`,email:``,address:`195, Boulevard Gagnon Sainte-Claire, QC G0R 2V0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Lassonde Industries`,contact:`Michel Tousignant`,title:`Director General Finance`,phone:`450-469-4926`,email:`michel.tousignant@lassonde.com`,address:`755 Rue Principale, Rougemont, Quebec, J0L 1M0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Corsaire MicroBrasserie`,contact:`Benjamin Hasty`,title:`Manager and Corsair Pub`,phone:`581-397-4830`,email:`ben@corsairemicro.com`,address:`8780 Boulevard Guillaume-Couture, Lévis, QC G6V 9G9`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Impact I.S. Design Inc.`,contact:`Find info on management`,title:``,phone:`450-635-0002`,email:``,address:`200 CHEMIN SAINT FRANÇOIS XAVIER LOCAL 100 DELSON, QUEBEC J5B 1Y1`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Pronet Distribution`,contact:`Erik Vandette`,title:`Associé | Partner`,phone:`438-888-6088`,email:`evandette@pronetdistribution.com`,address:`650 Rue Gaudette, Local 2, Saint-Jean-Sur-Richelieu, Quebec J3B 1L7`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Valtech fabrication`,contact:`Naim Baksh`,title:`Owner and Chief Executive Officer Valtech Fabrication`,phone:`450-371-0033`,email:`naim@valtechfabrication.com`,address:`730, boulevard des Érables Salaberry-de-Valleyfield (QC) J6T 6G4`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Universal Chairs`,contact:`Laure Cormier`,title:`Business Development`,phone:`418-476-0221`,email:``,address:`692 Boul. Guimond Longueuil, Canada J4G 1T5`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Casair`,contact:`Find info on management`,title:``,phone:`450-577-1051`,email:``,address:`Centre de l'Aviation Sportive 5604 Chemin de l\`Aéroport Valcourt, Québec, J0E 2L0`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`DL Perfomance`,contact:``,title:``,phone:`450-403-7858`,email:``,address:`2570 BL Industriel, Chambly`,region:`QC`,note:``,status:"Nouveau",date:""},
+  {company:`Centre de distribution transrapide`,contact:``,title:``,phone:`418-903-9777 ext 3125`,email:``,address:``,region:`QC`,note:``,status:"Nouveau",date:""}
+];
+
+let data = RAW.map((r,i)=>({...r,id:i}));
+let nextId = data.length;
+let editingId = null;
+let sortCol='company', sortDir=1;
+
+const BADGE={Nouveau:'b-new',Appelé:'b-called',Chaud:'b-hot',RDV:'b-rdv','Follow-up':'b-follow',KO:'b-ko'};
+const OPTS=['Nouveau','Appelé','Chaud','RDV','Follow-up','KO'];
+const RCLS={QC:'rqc',ON:'ron',NB:'rnb',NS:'rns',AB:'rab',BC:'rbc',USA:'rusa'};
+
+function getFiltered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const st=document.getElementById('filter-status').value;
+  const rg=document.getElementById('filter-region').value;
+  return data.filter(r=>{
+    const matchQ=!q||(r.company+r.contact+r.title+r.address+r.note+r.phone+r.email).toLowerCase().includes(q);
+    return matchQ&&(!st||r.status===st)&&(!rg||r.region===rg);
+  }).sort((a,b)=>{
+    const av=(a[sortCol]||'').toLowerCase(),bv=(b[sortCol]||'').toLowerCase();
+    return av<bv?-sortDir:av>bv?sortDir:0;
+  });
+}
+
+function updateStats(){
+  const c={};OPTS.forEach(s=>c[s]=0);
+  data.forEach(r=>{if(c[r.status]!==undefined)c[r.status]++;});
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${data.length}</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n" style="color:#1D4ED8">${c['Nouveau']}</div><div class="stat-l">Nouveau</div></div>
+    <div class="stat"><div class="stat-n" style="color:#166534">${c['Appelé']}</div><div class="stat-l">Appelé</div></div>
+    <div class="stat"><div class="stat-n" style="color:#92400E">${c['Chaud']}</div><div class="stat-l">Chaud</div></div>
+    <div class="stat"><div class="stat-n" style="color:#065F46">${c['RDV']+c['Follow-up']}</div><div class="stat-l">RDV / Suivi</div></div>
+  `;
+}
+
+function render(){
+  const rows=getFiltered();
+  document.getElementById('count').textContent=`${rows.length} prospect${rows.length>1?'s':''} affichés`;
+  const tb=document.getElementById('tbody');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="9" class="empty">Aucun résultat</td></tr>`;return;}
+  tb.innerHTML=rows.map(r=>`
+    <tr>
+      <td><div class="co-name">${r.company}<span class="co-region ${RCLS[r.region]||'rqc'}">${r.region}</span></div></td>
+      <td><div class="contact-name">${r.contact||'—'}</div><div class="contact-title">${r.title}</div></td>
+      <td class="phone"><a href="tel:${r.phone}">${r.phone||'—'}</a></td>
+      <td style="font-size:11px;color:#2563EB;word-break:break-all">${r.email?`<a href="mailto:${r.email}" style="color:#2563EB;text-decoration:none">${r.email}</a>`:''}</td>
+      <td class="addr">${r.address}</td>
+      <td>
+        <select class="status-sel" data-id="${r.id}">
+          ${OPTS.map(o=>`<option value="${o}"${r.status===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+        <span class="badge ${BADGE[r.status]||'b-new'}" id="badge-${r.id}">${r.status}</span>
+      </td>
+      <td><input type="date" class="date-inp" value="${r.date}" data-date="${r.id}"></td>
+      <td class="note-cell">${r.note}</td>
+      <td style="text-align:center;white-space:nowrap">
+        <button class="btn-action btn-edit" data-edit="${r.id}" title="Modifier">✏️</button>
+        <button class="btn-action btn-del" data-del="${r.id}" title="Supprimer">✕</button>
+      </td>
+    </tr>
+  `).join('');
+
+  tb.querySelectorAll('.status-sel').forEach(sel=>{
+    sel.addEventListener('change',e=>{
+      const id=+e.target.dataset.id;
+      const idx=data.findIndex(x=>x.id===id);
+      data[idx].status=e.target.value;
+      const b=document.getElementById('badge-'+id);
+      b.className='badge '+(BADGE[e.target.value]||'b-new');
+      b.textContent=e.target.value;
+      updateStats();
+    });
+  });
+  tb.querySelectorAll('[data-date]').forEach(inp=>{
+    inp.addEventListener('change',e=>{
+      const idx=data.findIndex(x=>x.id===+e.target.dataset.date);
+      if(idx>-1)data[idx].date=e.target.value;
+    });
+  });
+  tb.querySelectorAll('[data-edit]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      openEditModal(+e.target.dataset.edit);
+    });
+  });
+  tb.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const id=+e.target.dataset.del;
+      const r=data.find(x=>x.id===id);
+      if(confirm(`Supprimer "${r.company}" ?`)){
+        data=data.filter(x=>x.id!==id);
+        updateStats();render();
+      }
+    });
+  });
+}
+
+function sortBy(col){
+  if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
+  render();
+}
+
+function openModal(){
+  editingId=null;
+  document.getElementById('modal-title-text').textContent='Nouveau prospect';
+  document.getElementById('btn-save-modal').textContent='+ Ajouter';
+  ['f-company','f-contact','f-title','f-phone','f-email','f-address','f-date','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-region').value='QC';
+  document.getElementById('f-status').value='Nouveau';
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('f-company').focus();
+}
+
+function openEditModal(id){
+  const r=data.find(x=>x.id===id);
+  if(!r)return;
+  editingId=id;
+  document.getElementById('modal-title-text').textContent='Modifier le prospect';
+  document.getElementById('btn-save-modal').textContent='Enregistrer';
+  document.getElementById('f-company').value=r.company;
+  document.getElementById('f-contact').value=r.contact;
+  document.getElementById('f-title').value=r.title;
+  document.getElementById('f-phone').value=r.phone;
+  document.getElementById('f-email').value=r.email;
+  document.getElementById('f-address').value=r.address;
+  document.getElementById('f-region').value=r.region;
+  document.getElementById('f-status').value=r.status;
+  document.getElementById('f-date').value=r.date;
+  document.getElementById('f-note').value=r.note;
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('f-company').focus();
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('active');
+  editingId=null;
+}
+function closeIfBg(e){if(e.target===document.getElementById('overlay'))closeModal();}
+
+function saveProspect(){
+  const company=document.getElementById('f-company').value.trim();
+  if(!company){document.getElementById('f-company').style.borderColor='#EF4444';document.getElementById('f-company').focus();return;}
+  document.getElementById('f-company').style.borderColor='';
+
+  const fields={
+    company,
+    contact:document.getElementById('f-contact').value.trim(),
+    title:document.getElementById('f-title').value.trim(),
+    phone:document.getElementById('f-phone').value.trim()||'—',
+    email:document.getElementById('f-email').value.trim(),
+    address:document.getElementById('f-address').value.trim(),
+    region:document.getElementById('f-region').value,
+    status:document.getElementById('f-status').value,
+    date:document.getElementById('f-date').value,
+    note:document.getElementById('f-note').value.trim(),
+  };
+
+  if(editingId!==null){
+    const idx=data.findIndex(x=>x.id===editingId);
+    if(idx>-1) data[idx]={...data[idx],...fields};
+  } else {
+    data.unshift({...fields,id:nextId++});
+  }
+  closeModal();
+  updateStats();
+  render();
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filter-status').addEventListener('change',render);
+document.getElementById('filter-region').addEventListener('change',render);
+
+updateStats();
+render();
+</script>
+</body>
+</html>
