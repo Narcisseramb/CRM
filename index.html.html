@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Prospection — MKB Logistics</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#F1F5F9;color:#0F172A;font-size:13px}
+  .header{background:#0F172A;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .header-left{display:flex;align-items:center;gap:14px}
+  .logo{font-size:22px;font-weight:700;color:#3B82F6}
+  .logo span{color:#fff;font-weight:300;font-size:14px;letter-spacing:1px;display:block}
+  .header-title{color:#94A3B8;font-size:13px}
+  .header-right{color:#64748B;font-size:12px;text-align:right}
+  .sync-bar{background:#1E293B;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+  .sync-status{color:#94A3B8;display:flex;align-items:center;gap:8px}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:#22C55E;display:inline-block}
+  .sync-dot.loading{background:#F59E0B;animation:pulse 1s infinite}
+  .sync-dot.error{background:#EF4444}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .btn-sync{background:#3B82F6;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer}
+  .btn-sync:hover{background:#2563EB}
+  .main{padding:20px 24px}
+  .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+  .stat{background:#fff;border-radius:10px;padding:12px 14px;text-align:center;border:1px solid #E2E8F0}
+  .stat-n{font-size:24px;font-weight:600}
+  .stat-l{font-size:11px;color:#64748B;margin-top:3px}
+  .controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+  .controls input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A}
+  .controls input[type=text]:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+  .controls select{padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A;cursor:pointer}
+  .btn-add{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn-add:hover{background:#2563EB}
+  .count{font-size:12px;color:#64748B;margin-bottom:8px}
+  .tbl-wrap{background:#fff;border-radius:12px;border:1px solid #E2E8F0;overflow:hidden}
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  thead{background:#F8FAFC}
+  th{padding:10px 12px;text-align:left;font-weight:600;font-size:11px;color:#64748B;border-bottom:1px solid #E2E8F0;white-space:nowrap;cursor:pointer;user-select:none;text-transform:uppercase;letter-spacing:.04em}
+  th:hover{color:#0F172A;background:#F1F5F9}
+  td{padding:8px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle;word-break:break-word}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#F8FAFC}
+  .co-name{font-weight:600;color:#0F172A;font-size:13px}
+  .co-region{font-size:10px;font-weight:500;padding:1px 6px;border-radius:20px;margin-left:5px;vertical-align:middle}
+  .rqc{background:#EFF6FF;color:#1D4ED8}.ron{background:#F0FDF4;color:#166534}
+  .rnb{background:#FFF7ED;color:#C2410C}.rns{background:#F5F3FF;color:#5B21B6}
+  .rab{background:#FEF9C3;color:#854D0E}.rbc{background:#ECFDF5;color:#065F46}
+  .rusa{background:#FEF3C7;color:#92400E}
+  .contact-name{font-size:12px;color:#0F172A}
+  .contact-title{font-size:11px;color:#94A3B8}
+  .phone a{color:#2563EB;text-decoration:none;font-weight:500;font-size:12px}
+  .email-cell a{color:#2563EB;text-decoration:none;font-size:11px;word-break:break-all}
+  .addr{font-size:11px;color:#64748B;line-height:1.4}
+  .note-cell{font-size:11px;color:#64748B;word-break:break-all}
+  .badge{display:inline-block;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap;margin-top:3px}
+  .b-new{background:#DBEAFE;color:#1D4ED8}.b-called{background:#DCFCE7;color:#166534}
+  .b-hot{background:#FEF3C7;color:#92400E}.b-rdv{background:#D1FAE5;color:#065F46}
+  .b-follow{background:#EDE9FE;color:#5B21B6}.b-ko{background:#FEE2E2;color:#991B1B}
+  .status-sel{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;cursor:pointer;color:#0F172A;width:100%;margin-bottom:3px}
+  .date-inp{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;color:#0F172A;width:100%}
+  .btn-action{background:none;border:1px solid #E2E8F0;border-radius:6px;cursor:pointer;padding:3px 7px;font-size:11px;margin:1px}
+  .btn-edit{color:#2563EB}.btn-edit:hover{background:#EFF6FF;border-color:#BFDBFE}
+  .btn-del{color:#EF4444}.btn-del:hover{background:#FEE2E2;border-color:#FECACA}
+  .empty{text-align:center;padding:3rem;color:#94A3B8;font-size:14px}
+  .col-co{width:16%}.col-ct{width:13%}.col-ph{width:11%}.col-em{width:13%}.col-ad{width:14%}.col-st{width:10%}.col-dt{width:8%}.col-no{width:11%}.col-act{width:4%}
+  /* MODAL */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+  .overlay.active{display:flex}
+  .modal{background:#fff;border-radius:14px;padding:26px;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto}
+  .modal-title{font-size:16px;font-weight:700;color:#0F172A;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+  .modal-title button{background:none;border:none;font-size:22px;cursor:pointer;color:#94A3B8;line-height:1}
+  .modal-title button:hover{color:#0F172A}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fg{display:flex;flex-direction:column;gap:4px}
+  .fg.full{grid-column:1/-1}
+  .fg label{font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.04em}
+  .fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid #CBD5E1;border-radius:7px;font-size:13px;color:#0F172A;background:#fff;font-family:inherit}
+  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+  .fg textarea{resize:vertical;min-height:56px}
+  .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #F1F5F9}
+  .btn-cancel{background:#F1F5F9;color:#64748B;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-cancel:hover{background:#E2E8F0}
+  .btn-save{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-save:hover{background:#2563EB}
+  .save-indicator{display:none;position:fixed;bottom:24px;right:24px;background:#22C55E;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  .save-indicator.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div><div class="logo">MKB <span>LOGISTICS</span></div></div>
+    <div class="header-title">CRM Prospection — Narcisse Rambeloson</div>
+  </div>
+  <div class="header-right">The Express Moment<br><span id="date-header"></span></div>
+</div>
+
+<div class="sync-bar">
+  <div class="sync-status">
+    <span class="sync-dot" id="sync-dot"></span>
+    <span id="sync-text">Chargement des données depuis Google Sheets...</span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="last-sync" style="color:#475569;font-size:11px"></span>
+    <button class="btn-sync" onclick="loadFromSheets()">🔄 Synchroniser</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="stats-row" id="stats"></div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍  Rechercher entreprise, contact, ville, email...">
+    <select id="filter-status">
+      <option value="">Tous les statuts</option>
+      <option value="Nouveau">Nouveau</option>
+      <option value="Appelé">Appelé</option>
+      <option value="Chaud">Chaud</option>
+      <option value="RDV">RDV confirmé</option>
+      <option value="Follow-up">Follow-up</option>
+      <option value="KO">Pas intéressé</option>
+    </select>
+    <select id="filter-region">
+      <option value="">Toutes régions</option>
+      <option value="QC">Québec</option>
+      <option value="ON">Ontario</option>
+      <option value="NB">N.-Brunswick</option>
+      <option value="NS">Nouvelle-Écosse</option>
+      <option value="AB">Alberta</option>
+      <option value="BC">C.-Britannique</option>
+      <option value="USA">États-Unis</option>
+    </select>
+    <button class="btn-add" onclick="openModal()">&#43; Ajouter un prospect</button>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th class="col-co" onclick="sortBy('company')">Entreprise ↕</th>
+        <th class="col-ct">Contact</th>
+        <th class="col-ph">Téléphone</th>
+        <th class="col-em">Email</th>
+        <th class="col-ad">Adresse</th>
+        <th class="col-st">Statut</th>
+        <th class="col-dt">Rappel</th>
+        <th class="col-no">Notes</th>
+        <th class="col-act"></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeIfBg(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modal-title-text">Nouveau prospect</span>
+      <button onclick="closeModal()" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg full"><label>Entreprise *</label><input type="text" id="f-company" placeholder="Nom de l'entreprise"></div>
+      <div class="fg"><label>Contact (nom)</label><input type="text" id="f-contact" placeholder="Prénom Nom"></div>
+      <div class="fg"><label>Titre / Poste</label><input type="text" id="f-title" placeholder="Dir. Logistique..."></div>
+      <div class="fg"><label>Téléphone</label><input type="text" id="f-phone" placeholder="514-555-0000"></div>
+      <div class="fg"><label>Email</label><input type="text" id="f-email" placeholder="contact@entreprise.com"></div>
+      <div class="fg"><label>Région</label>
+        <select id="f-region">
+          <option value="QC">Québec</option><option value="ON">Ontario</option>
+          <option value="NB">N.-Brunswick</option><option value="NS">Nouvelle-Écosse</option>
+          <option value="AB">Alberta</option><option value="BC">C.-Britannique</option>
+          <option value="USA">États-Unis</option>
+        </select>
+      </div>
+      <div class="fg"><label>Statut</label>
+        <select id="f-status">
+          <option value="Nouveau">Nouveau</option><option value="Appelé">Appelé</option>
+          <option value="Chaud">Chaud</option><option value="RDV">RDV confirmé</option>
+          <option value="Follow-up">Follow-up</option><option value="KO">Pas intéressé</option>
+        </select>
+      </div>
+      <div class="fg full"><label>Adresse</label><input type="text" id="f-address" placeholder="123 rue Industrielle, Montréal, QC"></div>
+      <div class="fg"><label>Date de rappel</label><input type="date" id="f-date"></div>
+      <div class="fg full"><label>Notes</label><textarea id="f-note" placeholder="Informations complémentaires..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" id="btn-save-modal" onclick="saveProspect()">&#43; Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-indicator" id="save-indicator">✅ Sauvegardé localement</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbyJNmpbf6L0wo4ePrmIqk6AYbL2KG1J_B2DOFk0WVYddbBN_0qURu-UGahYk42uha-eEA/exec';
+
+document.getElementById('date-header').textContent = new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
+
+let data = [];
+let nextId = 0;
+let editingId = null;
+let sortCol = 'company', sortDir = 1;
+
+const BADGE = {Nouveau:'b-new',Appelé:'b-called',Chaud:'b-hot',RDV:'b-rdv','Follow-up':'b-follow',KO:'b-ko'};
+const OPTS  = ['Nouveau','Appelé','Chaud','RDV','Follow-up','KO'];
+const RCLS  = {QC:'rqc',ON:'ron',NB:'rnb',NS:'rns',AB:'rab',BC:'rbc',USA:'rusa'};
+
+// ── LOAD FROM GOOGLE SHEETS ────────────────────────
+async function loadFromSheets() {
+  setSyncStatus('loading', 'Chargement depuis Google Sheets...');
+  try {
+    const res  = await fetch(API_URL);
+    const rows = await res.json();
+
+    const imported = rows.map((row, i) => {
+      const get = (key) => row[key] ? String(row[key]).trim() : '';
+
+      const company = get('Company Name');
+      if (!company || company === 'undefined') return null;
+
+      // Phone: Personal Number first, then Contact Info
+      const phone = get('Personal Number') || get('Contact Info') || '—';
+
+      // Email from Info de Marek
+      const infoMarek = get('Info de Marek');
+      const emailMatch = (infoMarek + get('Contact Info')).match(/[\w.-]+@[\w.-]+\.\w+/);
+      const email = emailMatch ? emailMatch[0] : '';
+
+      // Detect region from address
+      const addr = get('Company Address').toUpperCase();
+      let region = 'QC';
+      if ([', ON', 'ONTARIO', 'MISSISSAUGA', 'BOWMANVILLE', 'KITCHENER', 'STONEY CREEK'].some(x=>addr.includes(x))) region='ON';
+      else if ([', NB', 'EDMUNDSTON'].some(x=>addr.includes(x))) region='NB';
+      else if (['NOVA SCOTIA',', NS','NAPPAN'].some(x=>addr.includes(x))) region='NS';
+      else if (['CALGARY',', AB '].some(x=>addr.includes(x))) region='AB';
+      else if (['SURREY',', BC'].some(x=>addr.includes(x))) region='BC';
+
+      // Preserve local changes
+      const existing = data.find(d => d.company === company);
+
+      return {
+        id:      i,
+        company,
+        contact: get('Contact Name').replace(/\s*-\s*.*/,'').trim() || '—',
+        title:   get('Title'),
+        phone:   phone.split(/[,\n]/)[0].trim(),
+        email,
+        address: get('Company Address'),
+        region,
+        status:  existing ? existing.status : 'Nouveau',
+        date:    existing ? existing.date   : '',
+        note:    existing ? existing.note   : get('Note 1'),
+      };
+    }).filter(Boolean);
+
+    const localOnly = data.filter(d => d.id >= 10000);
+    data   = [...imported, ...localOnly];
+    nextId = 10000 + localOnly.length;
+
+    setSyncStatus('ok', `${data.length} prospects chargés`);
+    document.getElementById('last-sync').textContent = 'Sync: ' + new Date().toLocaleTimeString('fr-CA');
+    updateStats(); render();
+
+  } catch(e) {
+    setSyncStatus('error', 'Erreur: ' + e.message);
+    console.error(e);
+  }
+}
+
+function setSyncStatus(state, msg) {
+  const dot  = document.getElementById('sync-dot');
+  const text = document.getElementById('sync-text');
+  dot.className  = 'sync-dot' + (state==='loading' ? ' loading' : state==='error' ? ' error' : '');
+  text.textContent = msg;
+}
+
+// ── FILTERS & SORT ─────────────────────────────────
+function getFiltered() {
+  const q  = document.getElementById('search').value.toLowerCase();
+  const st = document.getElementById('filter-status').value;
+  const rg = document.getElementById('filter-region').value;
+  return data.filter(r => {
+    const mq = !q || (r.company+r.contact+r.title+r.address+r.note+r.phone+r.email).toLowerCase().includes(q);
+    return mq && (!st||r.status===st) && (!rg||r.region===rg);
+  }).sort((a,b) => {
+    const av=(a[sortCol]||'').toLowerCase(), bv=(b[sortCol]||'').toLowerCase();
+    return av<bv?-sortDir:av>bv?sortDir:0;
+  });
+}
+
+function updateStats() {
+  const c={};OPTS.forEach(s=>c[s]=0);
+  data.forEach(r=>{if(c[r.status]!==undefined)c[r.status]++;});
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${data.length}</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n" style="color:#1D4ED8">${c['Nouveau']}</div><div class="stat-l">Nouveau</div></div>
+    <div class="stat"><div class="stat-n" style="color:#166534">${c['Appelé']}</div><div class="stat-l">Appelé</div></div>
+    <div class="stat"><div class="stat-n" style="color:#92400E">${c['Chaud']}</div><div class="stat-l">Chaud</div></div>
+    <div class="stat"><div class="stat-n" style="color:#065F46">${c['RDV']+c['Follow-up']}</div><div class="stat-l">RDV / Suivi</div></div>
+  `;
+}
+
+function render() {
+  const rows = getFiltered();
+  document.getElementById('count').textContent = `${rows.length} prospect${rows.length>1?'s':''} affichés`;
+  const tb = document.getElementById('tbody');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="9" class="empty">Aucun résultat</td></tr>`; return; }
+  tb.innerHTML = rows.map(r=>`
+    <tr>
+      <td><div class="co-name">${r.company}<span class="co-region ${RCLS[r.region]||'rqc'}">${r.region}</span></div></td>
+      <td><div class="contact-name">${r.contact||'—'}</div><div class="contact-title">${r.title||''}</div></td>
+      <td class="phone"><a href="tel:${r.phone}">${r.phone||'—'}</a></td>
+      <td class="email-cell">${r.email?`<a href="mailto:${r.email}">${r.email}</a>`:''}</td>
+      <td class="addr">${r.address||''}</td>
+      <td>
+        <select class="status-sel" data-id="${r.id}">
+          ${OPTS.map(o=>`<option value="${o}"${r.status===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+        <span class="badge ${BADGE[r.status]||'b-new'}" id="badge-${r.id}">${r.status}</span>
+      </td>
+      <td><input type="date" class="date-inp" value="${r.date||''}" data-date="${r.id}"></td>
+      <td class="note-cell">${r.note||''}</td>
+      <td style="text-align:center;white-space:nowrap">
+        <button class="btn-action btn-edit" data-edit="${r.id}" title="Modifier">✏️</button>
+        <button class="btn-action btn-del"  data-del="${r.id}"  title="Supprimer">✕</button>
+      </td>
+    </tr>
+  `).join('');
+
+  tb.querySelectorAll('.status-sel').forEach(sel=>{
+    sel.addEventListener('change',e=>{
+      const id=+e.target.dataset.id;
+      const idx=data.findIndex(x=>x.id===id);
+      data[idx].status=e.target.value;
+      const b=document.getElementById('badge-'+id);
+      b.className='badge '+(BADGE[e.target.value]||'b-new');
+      b.textContent=e.target.value;
+      updateStats(); showSaved();
+    });
+  });
+  tb.querySelectorAll('[data-date]').forEach(inp=>{
+    inp.addEventListener('change',e=>{
+      const idx=data.findIndex(x=>x.id===+e.target.dataset.date);
+      if(idx>-1){data[idx].date=e.target.value; showSaved();}
+    });
+  });
+  tb.querySelectorAll('[data-edit]').forEach(btn=>{
+    btn.addEventListener('click',e=>openEditModal(+e.currentTarget.dataset.edit));
+  });
+  tb.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const id=+e.currentTarget.dataset.del;
+      const r=data.find(x=>x.id===id);
+      if(confirm(`Supprimer "${r.company}" ?`)){
+        data=data.filter(x=>x.id!==id);
+        updateStats(); render();
+      }
+    });
+  });
+}
+
+function sortBy(col) {
+  if(sortCol===col)sortDir*=-1; else{sortCol=col;sortDir=1;}
+  render();
+}
+
+// ── MODAL ──────────────────────────────────────────
+function openModal() {
+  editingId=null;
+  document.getElementById('modal-title-text').textContent='Nouveau prospect';
+  document.getElementById('btn-save-modal').textContent='+ Ajouter';
+  ['f-company','f-contact','f-title','f-phone','f-email','f-address','f-date','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-region').value='QC';
+  document.getElementById('f-status').value='Nouveau';
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('f-company').focus();
+}
+function openEditModal(id) {
+  const r=data.find(x=>x.id===id); if(!r)return;
+  editingId=id;
+  document.getElementById('modal-title-text').textContent='Modifier le prospect';
+  document.getElementById('btn-save-modal').textContent='Enregistrer';
+  document.getElementById('f-company').value=r.company;
+  document.getElementById('f-contact').value=r.contact;
+  document.getElementById('f-title').value=r.title;
+  document.getElementById('f-phone').value=r.phone;
+  document.getElementById('f-email').value=r.email;
+  document.getElementById('f-address').value=r.address;
+  document.getElementById('f-region').value=r.region;
+  document.getElementById('f-status').value=r.status;
+  document.getElementById('f-date').value=r.date;
+  document.getElementById('f-note').value=r.note;
+  document.getElementById('overlay').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('active');
+  editingId=null;
+}
+function closeIfBg(e){if(e.target===document.getElementById('overlay'))closeModal();}
+
+function saveProspect() {
+  const company=document.getElementById('f-company').value.trim();
+  if(!company){document.getElementById('f-company').style.borderColor='#EF4444';document.getElementById('f-company').focus();return;}
+  document.getElementById('f-company').style.borderColor='';
+  const fields={
+    company,
+    contact:document.getElementById('f-contact').value.trim()||'—',
+    title:  document.getElementById('f-title').value.trim(),
+    phone:  document.getElementById('f-phone').value.trim()||'—',
+    email:  document.getElementById('f-email').value.trim(),
+    address:document.getElementById('f-address').value.trim(),
+    region: document.getElementById('f-region').value,
+    status: document.getElementById('f-status').value,
+    date:   document.getElementById('f-date').value,
+    note:   document.getElementById('f-note').value.trim(),
+  };
+  if(editingId!==null){
+    const idx=data.findIndex(x=>x.id===editingId);
+    if(idx>-1)data[idx]={...data[idx],...fields};
+  } else {
+    data.unshift({...fields,id:nextId++});
+  }
+  closeModal(); updateStats(); render(); showSaved();
+}
+
+function showSaved() {
+  const el=document.getElementById('save-indicator');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filter-status').addEventListener('change',render);
+document.getElementById('filter-region').addEventListener('change',render);
+
+// ── AUTO-REFRESH toutes les 5 minutes ─────────────
+loadFromSheets();
+setInterval(loadFromSheets, 5 * 60 * 1000);
+</script>
+</body>
+</html>
