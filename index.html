@@ -195,7 +195,7 @@
 
 <script>
 // ── CONFIG ─────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbwR-GWT4qDMLdOXbLgQ_Gwp5JO5S3feo6mEWDF1vrLefA6zQpiTTA2p0ZiEFqRtvJEp/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzgcaKlQhdHG1p8182AtWtrJGTujDfjeF9kGa6wmLFm5WvFeZQq000JnvIM9gVJgBfq/exec';
 
 document.getElementById('date-header').textContent = new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
 
@@ -440,13 +440,20 @@ function showSaved(msg='✅ Sauvegardé localement') {
 // ── SYNC STATUS TO GOOGLE SHEETS ──────────────────
 async function syncToSheets(company, status, note='', date='') {
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({company, status, note, date})
+    const params = new URLSearchParams({
+      action: 'update',
+      company: company,
+      status: status,
+      note: note,
+      date: date
     });
-    showSaved('✅ Synchronisé avec Google Sheets');
+    const res = await fetch(API_URL + '?' + params.toString());
+    const data = await res.json();
+    if (data.success) {
+      showSaved('✅ Synchronisé avec Google Sheets');
+    } else {
+      showSaved('⚠️ Erreur de synchronisation');
+    }
   } catch(e) {
     showSaved('⚠️ Sauvegardé localement (sync échouée)');
   }
