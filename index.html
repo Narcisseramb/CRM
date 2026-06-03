@@ -191,11 +191,11 @@
   </div>
 </div>
 
-<div class="save-indicator" id="save-indicator">✅ Sauvegardé localement</div>
+<div class="save-indicator" id="save-indicator">✅ Synchronisé</div>
 
 <script>
 // ── CONFIG ─────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbzo9NQGFu9pdW8fm31Bz9bZn9Pqhjw2msDN85nrFCt0EFdbOE1Hy7RnrEQPsHI6w7I/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwR-GWT4qDMLdOXbLgQ_Gwp5JO5S3feo6mEWDF1vrLefA6zQpiTTA2p0ZiEFqRtvJEp/exec';
 
 document.getElementById('date-header').textContent = new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
 
@@ -338,13 +338,17 @@ function render() {
       const b=document.getElementById('badge-'+id);
       b.className='badge '+(BADGE[e.target.value]||'b-new');
       b.textContent=e.target.value;
-      updateStats(); showSaved();
+      updateStats();
+      syncToSheets(data[idx].company, e.target.value, data[idx].note, data[idx].date);
     });
   });
   tb.querySelectorAll('[data-date]').forEach(inp=>{
     inp.addEventListener('change',e=>{
       const idx=data.findIndex(x=>x.id===+e.target.dataset.date);
-      if(idx>-1){data[idx].date=e.target.value; showSaved();}
+      if(idx>-1){
+        data[idx].date=e.target.value;
+        syncToSheets(data[idx].company, data[idx].status, data[idx].note, e.target.value);
+      }
     });
   });
   tb.querySelectorAll('[data-edit]').forEach(btn=>{
@@ -426,10 +430,26 @@ function saveProspect() {
   closeModal(); updateStats(); render(); showSaved();
 }
 
-function showSaved() {
+function showSaved(msg='✅ Sauvegardé localement') {
   const el=document.getElementById('save-indicator');
+  el.textContent=msg;
   el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2500);
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// ── SYNC STATUS TO GOOGLE SHEETS ──────────────────
+async function syncToSheets(company, status, note='', date='') {
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({company, status, note, date})
+    });
+    showSaved('✅ Synchronisé avec Google Sheets');
+  } catch(e) {
+    showSaved('⚠️ Sauvegardé localement (sync échouée)');
+  }
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
