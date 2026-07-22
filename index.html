@@ -1,472 +1,660 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM Prospection — MKB Logistics</title>
+<title>Rambelson Global — Your Bridge to Madagascar</title>
+<meta name="description" content="Translation, company registration in Madagascar, B2B prospecting, sourcing, travel planning and web services — in English, French and Malagasy.">
+<meta property="og:title" content="Rambelson Global — Your Bridge to Madagascar">
+<meta property="og:description" content="Your trusted bridge between Madagascar and the world — translation, business facilitation, prospecting and digital services.">
+<meta property="og:image" content="https://rambelsonglobal.com/og-image.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rambelsonglobal.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rambelsonglobal.com/og-image.jpg">
+<link rel="canonical" href="https://rambelsonglobal.com/">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,500;9..144,1,400;9..144,0,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Rambelson Global","url":"https://rambelsonglobal.com","logo":"https://rambelsonglobal.com/favicon.png","image":"https://rambelsonglobal.com/og-image.jpg","description":"Translation, company registration in Madagascar, B2B prospecting, sourcing, travel planning and web services.","founder":{"@type":"Person","name":"Narcisse Rambeloson"},"address":{"@type":"PostalAddress","addressLocality":"Toamasina","addressCountry":"MG"},"areaServed":"Worldwide","knowsLanguage":["en","fr","mg"],"email":"contact@rambelsonglobal.com","sameAs":["https://web.facebook.com/rambelsonglobal","https://www.fiverr.com/narcisserambelo"]}
+</script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#F1F5F9;color:#0F172A;font-size:13px}
-  .header{background:#0F172A;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
-  .header-left{display:flex;align-items:center;gap:14px}
-  .logo{font-size:22px;font-weight:700;color:#3B82F6}
-  .logo span{color:#fff;font-weight:300;font-size:14px;letter-spacing:1px;display:block}
-  .header-title{color:#94A3B8;font-size:13px}
-  .header-right{color:#64748B;font-size:12px;text-align:right}
-  .sync-bar{background:#1E293B;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
-  .sync-status{color:#94A3B8;display:flex;align-items:center;gap:8px}
-  .sync-dot{width:8px;height:8px;border-radius:50%;background:#22C55E;display:inline-block}
-  .sync-dot.loading{background:#F59E0B;animation:pulse 1s infinite}
-  .sync-dot.error{background:#EF4444}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .btn-sync{background:#3B82F6;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer}
-  .btn-sync:hover{background:#2563EB}
-  .main{padding:20px 24px}
-  .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
-  .stat{background:#fff;border-radius:10px;padding:12px 14px;text-align:center;border:1px solid #E2E8F0}
-  .stat-n{font-size:24px;font-weight:600}
-  .stat-l{font-size:11px;color:#64748B;margin-top:3px}
-  .controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
-  .controls input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A}
-  .controls input[type=text]:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-  .controls select{padding:8px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;background:#fff;color:#0F172A;cursor:pointer}
-  .btn-add{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
-  .btn-add:hover{background:#2563EB}
-  .count{font-size:12px;color:#64748B;margin-bottom:8px}
-  .tbl-wrap{background:#fff;border-radius:12px;border:1px solid #E2E8F0;overflow:hidden}
-  table{width:100%;border-collapse:collapse;table-layout:fixed}
-  thead{background:#F8FAFC}
-  th{padding:10px 12px;text-align:left;font-weight:600;font-size:11px;color:#64748B;border-bottom:1px solid #E2E8F0;white-space:nowrap;cursor:pointer;user-select:none;text-transform:uppercase;letter-spacing:.04em}
-  th:hover{color:#0F172A;background:#F1F5F9}
-  td{padding:8px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle;word-break:break-word}
-  tr:last-child td{border-bottom:none}
-  tr:hover td{background:#F8FAFC}
-  .co-name{font-weight:600;color:#0F172A;font-size:13px}
-  .co-region{font-size:10px;font-weight:500;padding:1px 6px;border-radius:20px;margin-left:5px;vertical-align:middle}
-  .rqc{background:#EFF6FF;color:#1D4ED8}.ron{background:#F0FDF4;color:#166534}
-  .rnb{background:#FFF7ED;color:#C2410C}.rns{background:#F5F3FF;color:#5B21B6}
-  .rab{background:#FEF9C3;color:#854D0E}.rbc{background:#ECFDF5;color:#065F46}
-  .rusa{background:#FEF3C7;color:#92400E}
-  .contact-name{font-size:12px;color:#0F172A}
-  .contact-title{font-size:11px;color:#94A3B8}
-  .phone a{color:#2563EB;text-decoration:none;font-weight:500;font-size:12px}
-  .email-cell a{color:#2563EB;text-decoration:none;font-size:11px;word-break:break-all}
-  .addr{font-size:11px;color:#64748B;line-height:1.4}
-  .note-cell{font-size:11px;color:#64748B;word-break:break-all}
-  .badge{display:inline-block;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap;margin-top:3px}
-  .b-new{background:#DBEAFE;color:#1D4ED8}.b-called{background:#DCFCE7;color:#166534}
-  .b-hot{background:#FEF3C7;color:#92400E}.b-rdv{background:#D1FAE5;color:#065F46}
-  .b-follow{background:#EDE9FE;color:#5B21B6}.b-ko{background:#FEE2E2;color:#991B1B}
-  .status-sel{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;cursor:pointer;color:#0F172A;width:100%;margin-bottom:3px}
-  .date-inp{font-size:11px;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;background:#fff;color:#0F172A;width:100%}
-  .btn-action{background:none;border:1px solid #E2E8F0;border-radius:6px;cursor:pointer;padding:3px 7px;font-size:11px;margin:1px}
-  .btn-edit{color:#2563EB}.btn-edit:hover{background:#EFF6FF;border-color:#BFDBFE}
-  .btn-del{color:#EF4444}.btn-del:hover{background:#FEE2E2;border-color:#FECACA}
-  .empty{text-align:center;padding:3rem;color:#94A3B8;font-size:14px}
-  .col-co{width:16%}.col-ct{width:13%}.col-ph{width:11%}.col-em{width:13%}.col-ad{width:14%}.col-st{width:10%}.col-dt{width:8%}.col-no{width:11%}.col-act{width:4%}
-  /* MODAL */
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
-  .overlay.active{display:flex}
-  .modal{background:#fff;border-radius:14px;padding:26px;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto}
-  .modal-title{font-size:16px;font-weight:700;color:#0F172A;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
-  .modal-title button{background:none;border:none;font-size:22px;cursor:pointer;color:#94A3B8;line-height:1}
-  .modal-title button:hover{color:#0F172A}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .fg{display:flex;flex-direction:column;gap:4px}
-  .fg.full{grid-column:1/-1}
-  .fg label{font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.04em}
-  .fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid #CBD5E1;border-radius:7px;font-size:13px;color:#0F172A;background:#fff;font-family:inherit}
-  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-  .fg textarea{resize:vertical;min-height:56px}
-  .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #F1F5F9}
-  .btn-cancel{background:#F1F5F9;color:#64748B;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
-  .btn-cancel:hover{background:#E2E8F0}
-  .btn-save{background:#3B82F6;color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:13px;font-weight:600;cursor:pointer}
-  .btn-save:hover{background:#2563EB}
-  .save-indicator{display:none;position:fixed;bottom:24px;right:24px;background:#22C55E;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-  .save-indicator.show{display:block}
+:root{
+  --ink:#10312E; --ink-soft:#39544F;
+  --paper:#F3F6F4; --card:#FFFFFF;
+  --vanilla:#C7952F; --vanilla-soft:#F0E4C8;
+  --border:#D8E0DC; --muted:#7A9490;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.1}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1152px;margin:0 auto;padding:0 24px}
+
+/* Header */
+header{position:sticky;top:0;z-index:30;border-bottom:1px solid transparent;background:rgba(243,246,244,.4);backdrop-filter:blur(12px);transition:border-color .3s,background .3s}
+header.scrolled{border-color:rgba(216,224,220,.7);background:rgba(243,246,244,.85)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--serif);font-size:1.2rem;font-weight:600}
+.logo span{color:var(--vanilla)}
+.nav-links{display:flex;gap:28px;font-size:.875rem;color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--ink);color:#fff;padding:8px 18px;border-radius:999px;font-size:.875rem;font-weight:500;transition:opacity .2s}
+.nav-cta:hover{opacity:.85}
+@media(max-width:640px){.nav-links{display:none}}
+.lang-switch{display:flex;border:1.5px solid var(--border);border-radius:999px;padding:2px;background:var(--card)}
+.lang-btn{border:none;background:none;font-family:var(--sans);font-size:.75rem;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+.lang-btn.active{background:var(--ink);color:#fff}
+.form-msg{font-size:.85rem;border-radius:10px;padding:10px 14px;margin-top:10px;display:none}
+.form-msg.show{display:block}
+.form-msg.ok{background:#e4f3ea;color:#1c6b3c}
+.form-msg.err{background:#fbe7e7;color:#a12e2e}
+.form-submit[disabled]{opacity:.6;cursor:not-allowed}
+
+/* Hero */
+.hero{padding:80px 0 40px}
+@media(min-width:768px){.hero{padding:112px 0 56px}}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px}
+.kicker-dot{width:6px;height:6px;border-radius:50%;background:var(--vanilla)}
+.hero h1{font-size:clamp(2.4rem,5.5vw,3.8rem);max-width:18ch;margin-bottom:24px}
+.hero h1 em{color:var(--vanilla);font-style:italic;font-weight:400}
+.hero p{max-width:52ch;color:var(--ink-soft);font-size:1.1rem;font-weight:300;margin-bottom:32px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;padding:12px 24px;border-radius:999px;font-size:.9rem;font-weight:600;transition:opacity .2s}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(16,49,46,.25);color:var(--ink);padding:11px 22px;border-radius:999px;font-size:.9rem;font-weight:600;transition:background .2s}
+.btn-ghost:hover{background:var(--card)}
+.arrow{transition:transform .2s}
+.btn-primary:hover .arrow{transform:translateX(2px)}
+
+/* Route SVG */
+.route-wrap{background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:16px;padding:16px;backdrop-filter:blur(8px)}
+.route-caption{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+.route-path{stroke-dasharray:6 5}
+
+/* Services */
+.section-tag{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--vanilla)}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:40px}
+.section-header h2{font-size:clamp(1.8rem,3.5vw,2.4rem);margin-top:8px}
+.cat-filters{display:flex;gap:8px;flex-wrap:wrap}
+.cat-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);padding:6px 14px;border-radius:999px;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.cat-btn:hover{color:var(--ink)}
+.cat-btn.active{border-color:var(--ink);background:var(--ink);color:#fff}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.svc-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:24px;transition:transform .15s,border-color .15s,box-shadow .15s;display:flex;flex-direction:column}
+.svc-card:hover{transform:translateY(-3px);border-color:rgba(199,149,47,.5);box-shadow:0 18px 40px -24px rgba(16,49,46,.25)}
+.svc-icon{width:44px;height:44px;border-radius:12px;background:var(--vanilla-soft);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.2rem}
+.svc-card h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:8px}
+.svc-card p{color:var(--muted);font-size:.9rem;font-weight:300;flex:1}
+.svc-tag{display:inline-block;background:var(--vanilla-soft);color:#7d5c14;padding:3px 10px;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-top:16px}
+.svc-link{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:600;color:var(--vanilla);margin-top:10px}
+
+/* About */
+.about-box{background:var(--ink);color:var(--paper);border-radius:28px;padding:48px 32px;position:relative;overflow:hidden}
+@media(min-width:768px){.about-box{padding:56px}}
+.about-glow{position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:var(--vanilla);opacity:.12;filter:blur(60px);pointer-events:none}
+.about-grid{display:grid;gap:40px}
+@media(min-width:768px){.about-grid{grid-template-columns:1.2fr .8fr;align-items:center}}
+.about-text p{color:rgba(255,255,255,.8);font-weight:300;margin-bottom:16px}
+.about-link{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.25);color:#fff;padding:10px 20px;border-radius:999px;font-size:.875rem;font-weight:600;margin-top:8px;transition:background .2s}
+.about-link:hover{background:rgba(255,255,255,.1)}
+.portrait-wrap{position:relative}
+.portrait-wrap img{width:100%;border-radius:18px;border:2px solid rgba(199,149,47,.5);display:block}
+.portrait-caption{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--vanilla);color:var(--ink);padding:4px 16px;border-radius:999px;font-size:.75rem;font-weight:600}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px}
+.stat{border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px}
+.stat strong{display:block;font-family:var(--serif);font-size:1.3rem;color:var(--vanilla)}
+.stat span{font-size:.8rem;color:rgba(255,255,255,.7);font-weight:300}
+
+/* Testimonials marquee */
+.marquee-wrap{overflow:hidden;mask-image:linear-gradient(90deg,transparent,black 6%,black 94%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 6%,black 94%,transparent)}
+.marquee-track{display:flex;gap:16px;width:max-content;animation:marquee 38s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.review-card{width:340px;flex-shrink:0;background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:24px}
+.stars{color:var(--vanilla);font-size:.9rem;letter-spacing:2px;margin-bottom:12px}
+.review-card blockquote{font-style:italic;font-size:.9rem;color:rgba(16,49,46,.9);line-height:1.55}
+.reviewer{margin-top:14px;font-size:.75rem;color:var(--muted)}
+.reviewer strong{color:var(--ink);font-weight:600}
+
+/* FAQ */
+.faq-item{background:var(--card);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.faq-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;font-family:var(--sans);font-size:1rem;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;text-align:left}
+.faq-icon{width:28px;height:28px;border-radius:50%;background:var(--vanilla-soft);color:#7d5c14;display:grid;place-items:center;flex-shrink:0;font-size:1.1rem;transition:transform .25s;line-height:1}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-body{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+.faq-item.open .faq-body{max-height:300px}
+.faq-body p{padding:0 20px 18px;color:var(--muted);font-size:.9rem;font-weight:300}
+
+/* Contact */
+.contact-grid{display:grid;gap:32px;background:var(--card);border:1.5px solid var(--border);border-radius:28px;padding:32px}
+@media(min-width:768px){.contact-grid{grid-template-columns:1fr 1.1fr;padding:48px}}
+.contact-detail{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:.875rem;margin-bottom:10px;transition:background .15s}
+.contact-detail:hover{background:var(--vanilla-soft)}
+.contact-icon{width:18px;height:18px;flex-shrink:0;color:var(--vanilla)}
+.form-row{display:grid;gap:10px;margin-bottom:10px}
+@media(min-width:480px){.form-row.two{grid-template-columns:1fr 1fr}}
+input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;background:var(--paper);padding:12px 16px;font-family:var(--sans);font-size:.875rem;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--vanilla);box-shadow:0 0 0 3px rgba(199,149,47,.2)}
+textarea{resize:none}
+select{cursor:pointer}
+.form-submit{width:100%;margin-top:4px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:14px;font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.form-submit:hover{opacity:.85}
+.form-note{font-size:.75rem;color:var(--muted);margin-top:8px}
+
+/* Footer */
+footer{background:var(--ink);color:rgba(255,255,255,.85);margin-top:96px}
+.footer-grid{display:grid;gap:40px;padding:56px 0}
+@media(min-width:768px){.footer-grid{grid-template-columns:1fr 1fr 1fr}}
+.footer-brand{font-family:var(--serif);font-size:1.2rem;font-weight:600;margin-bottom:12px}
+.footer-brand span{color:var(--vanilla)}
+.footer-desc{font-size:.875rem;color:rgba(255,255,255,.65);font-weight:300;max-width:28ch}
+.footer-col-title{font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--vanilla);margin-bottom:16px}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:8px}
+.footer-col a{font-size:.875rem;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:8px;transition:color .15s}
+.footer-col a:hover{color:#fff}
+.footer-col .detail{font-size:.875rem;color:rgba(255,255,255,.6)}
+.footer-bar{border-top:1px solid rgba(255,255,255,.1);padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:.75rem;color:rgba(255,255,255,.55)}
+
+/* Facebook follow banner */
+
+
+/* Payment */
+.pay-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:32px;display:grid;gap:28px;align-items:center}
+@media(min-width:640px){.pay-card{grid-template-columns:1.5fr .5fr}}
+.pay-lead{font-weight:300;color:var(--ink)}
+.pay-lead strong{font-weight:600}
+.pay-note{font-size:.85rem;color:var(--muted);margin-top:10px;font-weight:300}
+.pay-action{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.pay-methods{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.btn-paypal{display:inline-flex;align-items:center;gap:8px;background:#0070BA;color:#fff;padding:12px 24px;border-radius:999px;font-size:.9rem;font-weight:600;transition:opacity .2s}
+.btn-paypal:hover{opacity:.85}
+
+/* Story page */
+.story-hero{padding:64px 0 24px}
+.story-hero h1{font-size:clamp(2rem,4.5vw,3rem);max-width:22ch;margin-top:12px;margin-bottom:0}
+.story-portrait{width:100%;border-radius:18px;border:2px solid rgba(199,149,47,.45);display:block;margin:32px 0}
+.story-body p{color:rgba(16,49,46,.85);font-weight:300;font-size:1rem;line-height:1.75;margin-bottom:20px}
+.mile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:36px 0}
+.mile{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:22px}
+.mile strong{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--vanilla);margin-bottom:4px}
+.mile span{font-size:.85rem;color:var(--muted);font-weight:300}
+.story-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:.875rem;color:var(--muted);margin-bottom:32px}
+.back-link:hover{color:var(--ink)}
+
+/* Guide page */
+.guide-body h2{font-size:1.4rem;margin:36px 0 12px;color:var(--ink)}
+.guide-body h3{font-size:1.05rem;margin:22px 0 8px;color:var(--ink)}
+.guide-body p{color:var(--muted);font-weight:300;margin-bottom:14px;line-height:1.7}
+.guide-table{width:100%;border-collapse:collapse;margin:16px 0 22px;font-size:.9rem}
+.guide-table th{background:var(--ink);color:#fff;text-align:left;padding:10px 14px;font-weight:500}
+.guide-table td{border:1px solid var(--border);padding:10px 14px;background:#fff}
+.callout{background:var(--vanilla-soft);border-left:4px solid var(--vanilla);border-radius:0 12px 12px 0;padding:14px 18px;margin:20px 0;font-size:.9rem;color:var(--ink)}
+.guide-cta{background:var(--ink);color:rgba(255,255,255,.9);border-radius:18px;padding:28px;text-align:center;margin:32px 0}
+.guide-cta h3{color:#fff;font-size:1.2rem;margin-bottom:10px}
+.guide-cta p{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:18px}
+.updated{font-size:.8rem;color:var(--muted);font-style:italic;margin-top:32px}
+
+@keyframes routeflow{to{stroke-dashoffset:-11}}
+@media (prefers-reduced-motion:reduce){@keyframes routeflow{to{stroke-dashoffset:0}}}
+section{padding:80px 0 0}
+section:last-child{padding-bottom:0}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div><div class="logo">MKB <span>LOGISTICS</span></div></div>
-    <div class="header-title">CRM Prospection — Narcisse Rambeloson</div>
-  </div>
-  <div class="header-right">The Express Moment<br><span id="date-header"></span></div>
-</div>
-
-<div class="sync-bar">
-  <div class="sync-status">
-    <span class="sync-dot" id="sync-dot"></span>
-    <span id="sync-text">Chargement des données depuis Google Sheets...</span>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span id="last-sync" style="color:#475569;font-size:11px"></span>
-    <button class="btn-sync" onclick="loadFromSheets()">🔄 Synchroniser</button>
-  </div>
-</div>
-
-<div class="main">
-  <div class="stats-row" id="stats"></div>
-  <div class="controls">
-    <input type="text" id="search" placeholder="🔍  Rechercher entreprise, contact, ville, email...">
-    <select id="filter-status">
-      <option value="">Tous les statuts</option>
-      <option value="Nouveau">Nouveau</option>
-      <option value="Appelé">Appelé</option>
-      <option value="Chaud">Chaud</option>
-      <option value="RDV">RDV confirmé</option>
-      <option value="Follow-up">Follow-up</option>
-      <option value="KO">Pas intéressé</option>
-    </select>
-    <select id="filter-region">
-      <option value="">Toutes régions</option>
-      <option value="QC">Québec</option>
-      <option value="ON">Ontario</option>
-      <option value="NB">N.-Brunswick</option>
-      <option value="NS">Nouvelle-Écosse</option>
-      <option value="AB">Alberta</option>
-      <option value="BC">C.-Britannique</option>
-      <option value="USA">États-Unis</option>
-    </select>
-    <button class="btn-add" onclick="openModal()">&#43; Ajouter un prospect</button>
-  </div>
-  <div class="count" id="count"></div>
-  <div class="tbl-wrap">
-    <table>
-      <thead><tr>
-        <th class="col-co" onclick="sortBy('company')">Entreprise ↕</th>
-        <th class="col-ct">Contact</th>
-        <th class="col-ph">Téléphone</th>
-        <th class="col-em">Email</th>
-        <th class="col-ad">Adresse</th>
-        <th class="col-st">Statut</th>
-        <th class="col-dt">Rappel</th>
-        <th class="col-no">Notes</th>
-        <th class="col-act"></th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="overlay" id="overlay" onclick="closeIfBg(event)">
-  <div class="modal">
-    <div class="modal-title">
-      <span id="modal-title-text">Nouveau prospect</span>
-      <button onclick="closeModal()" aria-label="Fermer">&times;</button>
-    </div>
-    <div class="form-grid">
-      <div class="fg full"><label>Entreprise *</label><input type="text" id="f-company" placeholder="Nom de l'entreprise"></div>
-      <div class="fg"><label>Contact (nom)</label><input type="text" id="f-contact" placeholder="Prénom Nom"></div>
-      <div class="fg"><label>Titre / Poste</label><input type="text" id="f-title" placeholder="Dir. Logistique..."></div>
-      <div class="fg"><label>Téléphone</label><input type="text" id="f-phone" placeholder="514-555-0000"></div>
-      <div class="fg"><label>Email</label><input type="text" id="f-email" placeholder="contact@entreprise.com"></div>
-      <div class="fg"><label>Région</label>
-        <select id="f-region">
-          <option value="QC">Québec</option><option value="ON">Ontario</option>
-          <option value="NB">N.-Brunswick</option><option value="NS">Nouvelle-Écosse</option>
-          <option value="AB">Alberta</option><option value="BC">C.-Britannique</option>
-          <option value="USA">États-Unis</option>
-        </select>
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a class="logo" href="index.html">Rambelson<span> Global</span></a>
+    <nav class="nav-links">
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#testimonials" data-i18n="nav.reviews">Reviews</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="story.html" data-i18n="nav.story">Our story</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button type="button" class="lang-btn" data-lang="fr" onclick="setLang('fr')">FR</button>
       </div>
-      <div class="fg"><label>Statut</label>
-        <select id="f-status">
-          <option value="Nouveau">Nouveau</option><option value="Appelé">Appelé</option>
-          <option value="Chaud">Chaud</option><option value="RDV">RDV confirmé</option>
-          <option value="Follow-up">Follow-up</option><option value="KO">Pas intéressé</option>
-        </select>
-      </div>
-      <div class="fg full"><label>Adresse</label><input type="text" id="f-address" placeholder="123 rue Industrielle, Montréal, QC"></div>
-      <div class="fg"><label>Date de rappel</label><input type="date" id="f-date"></div>
-      <div class="fg full"><label>Notes</label><textarea id="f-note" placeholder="Informations complémentaires..."></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-save" id="btn-save-modal" onclick="saveProspect()">&#43; Ajouter</button>
+      <a class="nav-cta" href="#contact" data-i18n="nav.cta">Get in touch</a>
     </div>
   </div>
-</div>
+</header>
 
-<div class="save-indicator" id="save-indicator">✅ Synchronisé</div>
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker"><span class="kicker-dot"></span> <span data-i18n="hero.kicker">Madagascar · Worldwide</span></div>
+    <h1 data-i18n-html="hero.h1">Your trusted <em>bridge</em> between Madagascar and the world.</h1>
+    <p data-i18n="hero.p">Rambelson Global helps international clients work with Madagascar with confidence — translation, business facilitation, market prospecting and digital services, delivered in English, French and Malagasy.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#services"><span data-i18n="hero.btnServices">Explore services</span> <span class="arrow">→</span></a>
+      <a class="btn-ghost" href="#contact" data-i18n="hero.btnContact">Get in touch</a>
+    </div>
+    <div class="route-wrap">
+      <svg viewBox="0 0 1000 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Route connecting Toamasina to Montréal, New York, Paris and Sydney" style="display:block;width:100%;height:auto">
+        <path d="M60 70 C 260 15, 460 15, 500 60 S 800 100, 940 45" fill="none" stroke="#C7952F" stroke-width="2" stroke-dasharray="6 5" style="animation:routeflow 1.4s linear infinite"/>
+        <circle cx="60" cy="70" r="7" fill="#10312E"/>
+        <circle cx="380" cy="30" r="4" fill="#C7952F"/>
+        <circle cx="600" cy="72" r="4" fill="#C7952F"/>
+        <circle cx="780" cy="76" r="4" fill="#C7952F"/>
+        <circle cx="940" cy="45" r="7" fill="#10312E"/>
+        <text x="60" y="92" font-family="Outfit,sans-serif" font-size="13" fill="#39544F" text-anchor="middle">Toamasina</text>
+        <text x="380" y="18" font-family="Outfit,sans-serif" font-size="12" fill="#39544F" text-anchor="middle">Montréal</text>
+        <text x="600" y="92" font-family="Outfit,sans-serif" font-size="12" fill="#39544F" text-anchor="middle">Paris</text>
+        <text x="780" y="96" font-family="Outfit,sans-serif" font-size="12" fill="#39544F" text-anchor="middle">New York</text>
+        <text x="940" y="26" font-family="Outfit,sans-serif" font-size="13" fill="#39544F" text-anchor="middle">Sydney</text>
+      </svg>
+      <div class="route-caption" data-i18n="hero.routeCaption">One partner on the ground — wherever you are</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-header">
+      <div><span class="section-tag" data-i18n="services.tag">Services</span><h2 data-i18n="services.h2">What we do</h2></div>
+      <div class="cat-filters">
+        <button class="cat-btn active" data-cat="all" onclick="filterSvc(this,'all')">✦ <span data-i18n="services.catAll">All services</span></button>
+        <button class="cat-btn" data-cat="language" onclick="filterSvc(this,'language')">🌍 <span data-i18n="services.catLanguage">Language</span></button>
+        <button class="cat-btn" data-cat="business" onclick="filterSvc(this,'business')">🇲🇬 <span data-i18n="services.catBusiness">Business</span></button>
+        <button class="cat-btn" data-cat="digital" onclick="filterSvc(this,'digital')">💻 <span data-i18n="services.catDigital">Digital</span></button>
+        <button class="cat-btn" data-cat="travel" onclick="filterSvc(this,'travel')">🧭 <span data-i18n="services.catTravel">Travel</span></button>
+      </div>
+    </div>
+    <div class="services-grid" id="svcGrid">
+      <div class="svc-card" data-cat="language"><div class="svc-icon">🌐</div><h3>Translation &amp; interpretation</h3><p>Professional translation and live interpretation with nearly a decade of experience across medical, humanitarian, legal and business content.</p><span class="svc-tag">EN · FR · Malagasy</span></div>
+      <div class="svc-card" data-cat="language"><div class="svc-icon">✨</div><h3>Transcription &amp; subtitling</h3><p>Accurate transcription of Malagasy audio and video, translated into English with clean, broadcast-ready subtitles.</p><span class="svc-tag">Malagasy → EN</span></div>
+      <div class="svc-card" data-cat="language"><div class="svc-icon">📚</div><h3>Learn Malagasy</h3><p>Structured Malagasy lessons for travelers, researchers and expats — taught by a native speaker with real teaching experience.</p><span class="svc-tag">Language coaching</span></div>
+      <a class="svc-card" data-cat="business" href="guide-company-registration-madagascar.html"><div class="svc-icon">🏢</div><h3>Company registration in Madagascar</h3><p>End-to-end business facilitation: register your company with bilingual documentation, power-of-attorney handling and progress reporting.</p><span class="svc-tag">Business setup</span><span class="svc-link">Free 2026 guide ↗</span></a>
+      <div class="svc-card" data-cat="business"><div class="svc-icon">🔍</div><h3>Local sourcing &amp; market research</h3><p>Supplier identification, price benchmarking, B2B connections and on-the-ground verification across Madagascar's key sectors.</p><span class="svc-tag">Market entry</span></div>
+      <div class="svc-card" data-cat="digital"><div class="svc-icon">👥</div><h3>Facebook group growth</h3><p>Grow your Facebook group with real, engaged members through organic promotion — no bots, no fake accounts.</p><span class="svc-tag">Social media</span></div>
+      <div class="svc-card" data-cat="digital"><div class="svc-icon">💻</div><h3>WordPress websites</h3><p>Design, build and maintain WordPress and WooCommerce sites — multilingual setup, migrations, e-commerce and ongoing support.</p><span class="svc-tag">Web services</span></div>
+      <div class="svc-card" data-cat="digital"><div class="svc-icon">📊</div><h3>B2B prospecting &amp; virtual assistance</h3><p>Cold calling, email outreach, CRM pipeline management and lead generation for North American and European markets.</p><span class="svc-tag">Sales support</span></div>
+      <div class="svc-card" data-cat="travel"><div class="svc-icon">🧭</div><h3>Madagascar trip planning</h3><p>Custom itineraries, overland expedition guides and on-the-ground insight to plan and organize your journey across Madagascar.</p><span class="svc-tag">Travel</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-box">
+      <div class="about-glow"></div>
+      <div class="about-grid">
+        <div>
+          <span class="section-tag" data-i18n="about.tag">Founder</span>
+          <h2 style="color:#fff;margin-top:12px;margin-bottom:20px" data-i18n="about.h2">One partner. Three languages. A whole island.</h2>
+          <div class="about-text">
+            <p data-i18n="about.p1">Rambelson Global is led by Narcisse Rambeloson, an economist and professional linguist based in Toamasina, Madagascar's largest port city. For nearly ten years he has helped organizations like the Peace Corps and Mercy Ships, international companies and private clients cross the language and logistics gap between Madagascar and the rest of the world.</p>
+            <p data-i18n="about.p2">Whether you need a contract translated, a company registered, a market prospected or a journey planned — you work with one accountable partner who understands both sides of the bridge.</p>
+          </div>
+          <a class="about-link" href="story.html" data-i18n="about.readStory">Read the story →</a>
+          <div class="stats">
+            <div class="stat"><strong>~10 yrs</strong><span data-i18n="about.stat1">translation &amp; interpretation experience</span></div>
+            <div class="stat"><strong>3 langs</strong><span data-i18n="about.stat2">English, French, Malagasy — native fluency</span></div>
+            <div class="stat"><strong>4 cont.</strong><span data-i18n="about.stat3">clients across N. America, Europe, Africa, Asia</span></div>
+            <div class="stat"><strong>&lt;24h</strong><span data-i18n="about.stat4">typical first reply on business days</span></div>
+          </div>
+        </div>
+        <div class="portrait-wrap">
+          <img src="narcisse.jpg" alt="Narcisse Rambeloson, founder of Rambelson Global" loading="lazy">
+          <div class="portrait-caption">Narcisse Rambeloson · Founder</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="wrap" style="margin-bottom:40px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div><span class="section-tag" data-i18n="testimonials.tag">Reviews</span><h2 style="margin-top:8px" data-i18n="testimonials.h2">What clients say</h2></div>
+      <a href="https://www.fiverr.com/narcisserambelo" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--muted)" data-i18n="testimonials.seeAll">See all on Fiverr ↗</a>
+    </div>
+  </div>
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Narcisse is proactive with his communication, delivers exceptional quality, and is willing to go the extra mile to give us exactly what we need. We appreciate working with him and will continue to!"</blockquote><div class="reviewer"><strong>johanna_jsmith</strong> — 🇨🇦 Canada · Web research</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Narcisse had great teaching materials tailored to my level and explained Malagasy grammar very well and interactively."</blockquote><div class="reviewer"><strong>collinba</strong> — 🇺🇸 United States · Malagasy lessons</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Delivered as promised and with speed. Excellent service. Would highly recommend."</blockquote><div class="reviewer"><strong>elliottconnelly</strong> — 🇬🇧 United Kingdom · Social media</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Great communication and product!"</blockquote><div class="reviewer"><strong>bradb55</strong> — 🇺🇸 United States · Translation</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Very quick turnaround time — that really helped us meet our project timelines. Highly recommend: very responsive, adapts to short-notice requests with enthusiasm."</blockquote><div class="reviewer"><strong>estonoboch</strong> — 🇰🇪 Kenya · Repeat client · Transcription</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"RAS, professionnel, rapide et efficace !"</blockquote><div class="reviewer"><strong>orane_bloch</strong> — 🇫🇷 France · Transcription</div></article>
+      <!-- duplicate for infinite scroll -->
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Narcisse is proactive with his communication, delivers exceptional quality, and is willing to go the extra mile to give us exactly what we need. We appreciate working with him and will continue to!"</blockquote><div class="reviewer"><strong>johanna_jsmith</strong> — 🇨🇦 Canada · Web research</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Narcisse had great teaching materials tailored to my level and explained Malagasy grammar very well and interactively."</blockquote><div class="reviewer"><strong>collinba</strong> — 🇺🇸 United States · Malagasy lessons</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Delivered as promised and with speed. Excellent service. Would highly recommend."</blockquote><div class="reviewer"><strong>elliottconnelly</strong> — 🇬🇧 United Kingdom · Social media</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Great communication and product!"</blockquote><div class="reviewer"><strong>bradb55</strong> — 🇺🇸 United States · Translation</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"Very quick turnaround time — that really helped us meet our project timelines. Highly recommend: very responsive, adapts to short-notice requests with enthusiasm."</blockquote><div class="reviewer"><strong>estonoboch</strong> — 🇰🇪 Kenya · Repeat client · Transcription</div></article>
+      <article class="review-card"><div class="stars">★★★★★</div><blockquote>"RAS, professionnel, rapide et efficace !"</blockquote><div class="reviewer"><strong>orane_bloch</strong> — 🇫🇷 France · Transcription</div></article>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:20px;font-size:.78rem;color:var(--muted)">
+    <span data-i18n="testimonials.verified">Verified reviews from our</span> <a href="https://www.fiverr.com/narcisserambelo" target="_blank" rel="noopener" style="color:var(--vanilla);font-weight:600" data-i18n="testimonials.fiverrProfile">Fiverr profile</a>.
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap" style="max-width:768px">
+    <div style="text-align:center;margin-bottom:40px"><span class="section-tag" data-i18n="faq.tag">FAQ</span><h2 style="margin-top:8px" data-i18n="faq.h2">Frequently asked questions</h2></div>
+    <div id="faqList">
+    <div class="faq-item open"><button class="faq-btn" onclick="toggleFaq(this)"><span>Do you work with clients in my country?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>Yes — we serve clients worldwide, with most work coming from Canada, the United States, France, Switzerland, the UK and Australia. Everything is done remotely by email, WhatsApp and video call, in English or French.</p></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="toggleFaq(this)"><span>How much does it cost to register a company in Madagascar?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>It depends on the company type (SARL or SARLU) and the package. Every project starts with a free itemized quote — official government fees are always billed at actual cost with receipts.</p></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="toggleFaq(this)"><span>How do payments work?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>Written quote first. We accept PayPal, Visa/Mastercard via secure Payoneer payment request, bank transfer (USD, EUR, CHF, CAD) and Fiverr. 50% deposit for larger projects.</p></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="toggleFaq(this)"><span>How fast do you reply and deliver?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>We reply within one business day. Translations are often delivered within 24–72 hours, and every quote includes a clear deadline.</p></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="toggleFaq(this)"><span>Can I verify your reviews?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>Yes — all testimonials are verified client reviews from our public Fiverr profile, where you can read every review in full.</p></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="toggleFaq(this)"><span>Do you sign NDAs?</span><span class="faq-icon">+</span></button><div class="faq-body"><p>Yes. Documents and data are never shared, and we gladly sign a non-disclosure agreement before any project.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section>
+  <div class="wrap">
+    <div class="pay-card">
+      <div>
+        <span class="section-tag" data-i18n="payment.tag">Payment</span>
+        <h2 style="margin-top:8px;margin-bottom:14px;font-size:1.6rem" data-i18n="payment.h2">Simple, secure payment</h2>
+        <p class="pay-lead" data-i18n-html="payment.lead">Once we've agreed on your project and price, paying is easy. We accept <strong>PayPal</strong> (PayPal account required) and <strong>card payments — Visa or Mastercard — via a secure Payoneer payment request</strong>, no account needed on your side. Bank transfer (USD, EUR, CHF, CAD) and Fiverr are also available.</p>
+        <p class="pay-note" data-i18n="payment.note">Payment terms are agreed per project before any work begins. You'll always receive a clear quote first.</p>
+      </div>
+      <div class="pay-action">
+        <a class="btn-paypal" href="https://paypal.me/NarcisseRAMBELOSON" target="_blank" rel="noopener" data-i18n="payment.btn">Pay with PayPal</a>
+        <span class="pay-methods" data-i18n="payment.methods">PayPal · Visa/Mastercard via Payoneer · Bank transfer</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <span class="section-tag" data-i18n="contact.tag">Contact</span>
+        <h2 style="margin-top:8px;margin-bottom:16px;font-size:1.9rem" data-i18n="contact.h2">Start a conversation.</h2>
+        <p style="color:var(--muted);font-weight:300;margin-bottom:24px" data-i18n="contact.p">Tell us about your project and we'll reply within one business day with a free, itemized quote and a clear timeline.</p>
+        <a class="contact-detail" href="mailto:contact@rambelsonglobal.com">
+          <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          contact@rambelsonglobal.com
+        </a>
+        <a class="contact-detail" href="https://wa.me/261343630456?text=Hi%20Narcisse%2C%20I%27m%20interested%20in%20your%20services.%20Can%20we%20talk%3F" target="_blank" rel="noopener">
+          <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span data-i18n="contact.whatsapp">WhatsApp us</span>
+        </a>
+        <div class="contact-detail" style="cursor:default">
+          <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span data-i18n="contact.replyNote">We reply within one business day · NDAs available</span>
+        </div>
+      </div>
+      <form id="contactForm">
+        <div class="form-row two">
+          <input name="name" data-i18n-attr="placeholder:contact.namePh" placeholder="Your name" required>
+          <input name="email" type="email" data-i18n-attr="placeholder:contact.emailPh" placeholder="Email address" required>
+        </div>
+        <div class="form-row"><select name="service" id="svcSelect"><option value="" data-i18n="contact.svcDefault">What can we help with?</option><option>Translation &amp; interpretation</option><option>Transcription &amp; subtitling</option><option>Learn Malagasy</option><option>Company registration in Madagascar</option><option>Local sourcing &amp; market research</option><option>Facebook group growth</option><option>WordPress websites</option><option>B2B prospecting &amp; virtual assistance</option><option>Madagascar trip planning</option></select></div>
+        <div class="form-row"><textarea name="message" rows="5" data-i18n-attr="placeholder:contact.messagePh" placeholder="Tell us about your project…" required></textarea></div>
+        <button type="submit" class="form-submit" id="formBtn" data-i18n="contact.send">Send message →</button>
+        <div id="formMsg" class="form-msg" role="status" aria-live="polite"></div>
+        <p class="form-note" data-i18n="contact.note">No spam, ever. Your details go straight to Narcisse.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Rambelson <span>Global</span></div>
+        <p class="footer-desc" data-i18n="footer.desc">Your trusted bridge between Madagascar and the world — translation, business facilitation, prospecting and digital services.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i18n="footer.contactTitle">Contact</div>
+        <ul>
+          <li><a href="mailto:contact@rambelsonglobal.com"><svg style="width:14px;height:14px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> contact@rambelsonglobal.com</a></li>
+          <li><a href="https://wa.me/261343630456" target="_blank" rel="noopener">WhatsApp +261 34 36 304 56</a></li>
+          <li><span class="detail" data-i18n="footer.location">Toamasina, Madagascar · Worldwide</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i18n="footer.elsewhereTitle">Elsewhere</div>
+        <ul>
+          <li><a href="https://www.fiverr.com/narcisserambelo" target="_blank" rel="noopener" data-i18n="footer.fiverr">Fiverr profile</a></li>
+          <li><a href="https://web.facebook.com/rambelsonglobal" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px"><svg style="width:16px;height:16px;fill:#1877F2;flex-shrink:0" viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.5-3.91 3.79-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.57v1.88h2.78l-.45 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg>Facebook</a></li>
+          <li><a href="story.html" data-i18n="footer.story">Our story</a></li>
+          <li><a href="guide-company-registration-madagascar.html" data-i18n="footer.guide">Free 2026 guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span data-i18n="footer.rights">© 2026 Rambelson Global LLC. All rights reserved.</span>
+      <span>EN · FR</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-// ── CONFIG ─────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbzgcaKlQhdHG1p8182AtWtrJGTujDfjeF9kGa6wmLFm5WvFeZQq000JnvIM9gVJgBfq/exec';
+// Header scroll effect
+window.addEventListener('scroll',function(){
+  document.getElementById('siteHeader').classList.toggle('scrolled',window.scrollY>8);
+},{passive:true});
 
-document.getElementById('date-header').textContent = new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
-
-let data = [];
-let nextId = 0;
-let editingId = null;
-let sortCol = 'company', sortDir = 1;
-
-const BADGE = {Nouveau:'b-new',Appelé:'b-called',Chaud:'b-hot',RDV:'b-rdv','Follow-up':'b-follow',KO:'b-ko'};
-const OPTS  = ['Nouveau','Appelé','Chaud','RDV','Follow-up','KO'];
-const RCLS  = {QC:'rqc',ON:'ron',NB:'rnb',NS:'rns',AB:'rab',BC:'rbc',USA:'rusa'};
-
-// ── LOAD FROM GOOGLE SHEETS ────────────────────────
-async function loadFromSheets() {
-  setSyncStatus('loading', 'Chargement depuis Google Sheets...');
-  try {
-    const res  = await fetch(API_URL);
-    const rows = await res.json();
-
-    const imported = rows.map((row, i) => {
-      const get = (key) => row[key] ? String(row[key]).trim() : '';
-
-      const company = get('Company Name');
-      if (!company || company === 'undefined') return null;
-
-      // Phone: Personal Number first, then Contact Info
-      const phone = get('Personal Number') || get('Contact Info') || '—';
-
-      // Email from Info de Marek
-      const infoMarek = get('Info de Marek');
-      const emailMatch = (infoMarek + get('Contact Info')).match(/[\w.-]+@[\w.-]+\.\w+/);
-      const email = emailMatch ? emailMatch[0] : '';
-
-      // Detect region from address
-      const addr = get('Company Address').toUpperCase();
-      let region = 'QC';
-      if ([', ON', 'ONTARIO', 'MISSISSAUGA', 'BOWMANVILLE', 'KITCHENER', 'STONEY CREEK'].some(x=>addr.includes(x))) region='ON';
-      else if ([', NB', 'EDMUNDSTON'].some(x=>addr.includes(x))) region='NB';
-      else if (['NOVA SCOTIA',', NS','NAPPAN'].some(x=>addr.includes(x))) region='NS';
-      else if (['CALGARY',', AB '].some(x=>addr.includes(x))) region='AB';
-      else if (['SURREY',', BC'].some(x=>addr.includes(x))) region='BC';
-
-      // Preserve local changes
-      const existing = data.find(d => d.company === company);
-
-      return {
-        id:      i,
-        company,
-        contact: get('Contact Name').replace(/\s*-\s*.*/,'').trim() || '—',
-        title:   get('Title'),
-        phone:   phone.split(/[,\n]/)[0].trim(),
-        email,
-        address: get('Company Address'),
-        region,
-        status:  existing ? existing.status : 'Nouveau',
-        date:    existing ? existing.date   : '',
-        note:    existing ? existing.note   : get('Note 1'),
-      };
-    }).filter(Boolean);
-
-    const localOnly = data.filter(d => d.id >= 10000);
-    data   = [...imported, ...localOnly];
-    nextId = 10000 + localOnly.length;
-
-    setSyncStatus('ok', `${data.length} prospects chargés`);
-    document.getElementById('last-sync').textContent = 'Sync: ' + new Date().toLocaleTimeString('fr-CA');
-    updateStats(); render();
-
-  } catch(e) {
-    setSyncStatus('error', 'Erreur: ' + e.message);
-    console.error(e);
+// ---------- i18n ----------
+const I18N = {
+  en: {
+    'nav.services':'Services','nav.about':'About','nav.reviews':'Reviews','nav.faq':'FAQ','nav.story':'Our story','nav.cta':'Get in touch',
+    'hero.kicker':'Madagascar · Worldwide',
+    'hero.h1':'Your trusted <em>bridge</em> between Madagascar and the world.',
+    'hero.p':'Rambelson Global helps international clients work with Madagascar with confidence — translation, business facilitation, market prospecting and digital services, delivered in English, French and Malagasy.',
+    'hero.btnServices':'Explore services','hero.btnContact':'Get in touch','hero.routeCaption':'One partner on the ground — wherever you are',
+    'services.tag':'Services','services.h2':'What we do','services.catAll':'All services','services.catLanguage':'Language','services.catBusiness':'Business','services.catDigital':'Digital','services.catTravel':'Travel',
+    'about.tag':'Founder','about.h2':'One partner. Three languages. A whole island.',
+    'about.p1':'Rambelson Global is led by Narcisse Rambeloson, an economist and professional linguist based in Toamasina, Madagascar\'s largest port city. For nearly ten years he has helped organizations like the Peace Corps and Mercy Ships, international companies and private clients cross the language and logistics gap between Madagascar and the rest of the world.',
+    'about.p2':'Whether you need a contract translated, a company registered, a market prospected or a journey planned — you work with one accountable partner who understands both sides of the bridge.',
+    'about.readStory':'Read the story →','about.stat1':'translation & interpretation experience','about.stat2':'English, French, Malagasy — native fluency','about.stat3':'clients across N. America, Europe, Africa, Asia','about.stat4':'typical first reply on business days',
+    'testimonials.tag':'Reviews','testimonials.h2':'What clients say','testimonials.seeAll':'See all on Fiverr ↗','testimonials.verified':'Verified reviews from our','testimonials.fiverrProfile':'Fiverr profile',
+    'faq.tag':'FAQ','faq.h2':'Frequently asked questions',
+    'payment.tag':'Payment','payment.h2':'Simple, secure payment',
+    'payment.lead':'Once we\'ve agreed on your project and price, paying is easy. We accept <strong>PayPal</strong> (PayPal account required) and <strong>card payments — Visa or Mastercard — via a secure Payoneer payment request</strong>, no account needed on your side. Bank transfer (USD, EUR, CHF, CAD) and Fiverr are also available.',
+    'payment.note':'Payment terms are agreed per project before any work begins. You\'ll always receive a clear quote first.','payment.btn':'Pay with PayPal','payment.methods':'PayPal · Visa/Mastercard via Payoneer · Bank transfer',
+    'contact.tag':'Contact','contact.h2':'Start a conversation.','contact.p':'Tell us about your project and we\'ll reply within one business day with a free, itemized quote and a clear timeline.',
+    'contact.whatsapp':'WhatsApp us','contact.replyNote':'We reply within one business day · NDAs available',
+    'contact.namePh':'Your name','contact.emailPh':'Email address','contact.svcDefault':'What can we help with?','contact.messagePh':'Tell us about your project…',
+    'contact.send':'Send message →','contact.sending':'Sending…','contact.sent':'Message sent ✓','contact.note':'No spam, ever. Your details go straight to Narcisse.',
+    'contact.successMsg':'Thanks! Your message has been sent — we\'ll reply within one business day.','contact.errorMsg':'Something went wrong. Please try again, or email us directly.','contact.fillMsg':'Please fill in name, email and message.',
+    'footer.desc':'Your trusted bridge between Madagascar and the world — translation, business facilitation, prospecting and digital services.',
+    'footer.contactTitle':'Contact','footer.location':'Toamasina, Madagascar · Worldwide','footer.elsewhereTitle':'Elsewhere','footer.fiverr':'Fiverr profile','footer.story':'Our story','footer.guide':'Free 2026 guide','footer.rights':'© 2026 Rambelson Global LLC. All rights reserved.'
+  },
+  fr: {
+    'nav.services':'Services','nav.about':'À propos','nav.reviews':'Avis','nav.faq':'FAQ','nav.story':'Notre histoire','nav.cta':'Nous contacter',
+    'hero.kicker':'Madagascar · Monde entier',
+    'hero.h1':'Votre <em>pont</em> de confiance entre Madagascar et le monde.',
+    'hero.p':'Rambelson Global aide les clients internationaux à travailler avec Madagascar en toute confiance — traduction, facilitation d\'affaires, prospection de marché et services numériques, en anglais, français et malgache.',
+    'hero.btnServices':'Découvrir nos services','hero.btnContact':'Nous contacter','hero.routeCaption':'Un seul partenaire sur le terrain — où que vous soyez',
+    'services.tag':'Services','services.h2':'Ce que nous faisons','services.catAll':'Tous les services','services.catLanguage':'Langue','services.catBusiness':'Business','services.catDigital':'Digital','services.catTravel':'Voyage',
+    'about.tag':'Fondateur','about.h2':'Un partenaire. Trois langues. Une île entière.',
+    'about.p1':'Rambelson Global est dirigé par Narcisse Rambeloson, économiste et linguiste professionnel basé à Toamasina, la plus grande ville portuaire de Madagascar. Depuis près de dix ans, il aide des organisations comme le Peace Corps et Mercy Ships, des entreprises internationales et des clients privés à franchir l\'écart linguistique et logistique entre Madagascar et le reste du monde.',
+    'about.p2':'Qu\'il s\'agisse de traduire un contrat, créer une entreprise, prospecter un marché ou organiser un voyage — vous travaillez avec un partenaire unique et responsable qui comprend les deux côtés du pont.',
+    'about.readStory':'Lire notre histoire →','about.stat1':'d\'expérience en traduction & interprétation','about.stat2':'Anglais, français, malgache — maîtrise native','about.stat3':'clients en Amérique du N., Europe, Afrique, Asie','about.stat4':'délai de première réponse en jours ouvrés',
+    'testimonials.tag':'Avis','testimonials.h2':'Ce que disent nos clients','testimonials.seeAll':'Voir tout sur Fiverr ↗','testimonials.verified':'Avis vérifiés provenant de notre','testimonials.fiverrProfile':'profil Fiverr',
+    'faq.tag':'FAQ','faq.h2':'Questions fréquentes',
+    'payment.tag':'Paiement','payment.h2':'Paiement simple et sécurisé',
+    'payment.lead':'Une fois le projet et le prix convenus, le paiement est simple. Nous acceptons <strong>PayPal</strong> (compte PayPal requis) et les <strong>paiements par carte — Visa ou Mastercard — via une demande de paiement Payoneer sécurisée</strong>, sans compte nécessaire de votre côté. Le virement bancaire (USD, EUR, CHF, CAD) et Fiverr sont également disponibles.',
+    'payment.note':'Les modalités de paiement sont convenues pour chaque projet avant le début des travaux. Vous recevrez toujours un devis clair au préalable.','payment.btn':'Payer avec PayPal','payment.methods':'PayPal · Visa/Mastercard via Payoneer · Virement bancaire',
+    'contact.tag':'Contact','contact.h2':'Démarrons une conversation.','contact.p':'Parlez-nous de votre projet et nous répondrons sous un jour ouvré avec un devis détaillé gratuit et un délai clair.',
+    'contact.whatsapp':'Nous écrire sur WhatsApp','contact.replyNote':'Réponse sous un jour ouvré · NDA disponibles',
+    'contact.namePh':'Votre nom','contact.emailPh':'Adresse email','contact.svcDefault':'En quoi pouvons-nous vous aider ?','contact.messagePh':'Parlez-nous de votre projet…',
+    'contact.send':'Envoyer le message →','contact.sending':'Envoi…','contact.sent':'Message envoyé ✓','contact.note':'Jamais de spam. Vos informations vont directement à Narcisse.',
+    'contact.successMsg':'Merci ! Votre message a été envoyé — nous répondrons sous un jour ouvré.','contact.errorMsg':'Une erreur est survenue. Veuillez réessayer, ou nous écrire directement.','contact.fillMsg':'Merci de renseigner votre nom, email et message.',
+    'footer.desc':'Votre pont de confiance entre Madagascar et le monde — traduction, facilitation d\'affaires, prospection et services numériques.',
+    'footer.contactTitle':'Contact','footer.location':'Toamasina, Madagascar · Monde entier','footer.elsewhereTitle':'Ailleurs','footer.fiverr':'Profil Fiverr','footer.story':'Notre histoire','footer.guide':'Guide gratuit 2026','footer.rights':'© 2026 Rambelson Global LLC. Tous droits réservés.'
   }
-}
+};
 
-function setSyncStatus(state, msg) {
-  const dot  = document.getElementById('sync-dot');
-  const text = document.getElementById('sync-text');
-  dot.className  = 'sync-dot' + (state==='loading' ? ' loading' : state==='error' ? ' error' : '');
-  text.textContent = msg;
-}
+let currentLang = localStorage.getItem('rg_lang') === 'fr' ? 'fr' : 'en';
 
-// ── FILTERS & SORT ─────────────────────────────────
-function getFiltered() {
-  const q  = document.getElementById('search').value.toLowerCase();
-  const st = document.getElementById('filter-status').value;
-  const rg = document.getElementById('filter-region').value;
-  return data.filter(r => {
-    const mq = !q || (r.company+r.contact+r.title+r.address+r.note+r.phone+r.email).toLowerCase().includes(q);
-    return mq && (!st||r.status===st) && (!rg||r.region===rg);
-  }).sort((a,b) => {
-    const av=(a[sortCol]||'').toLowerCase(), bv=(b[sortCol]||'').toLowerCase();
-    return av<bv?-sortDir:av>bv?sortDir:0;
+function t(key){ return (I18N[currentLang] && I18N[currentLang][key]) || (I18N.en[key] || key); }
+
+function applyStaticI18n(){
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.getAttribute('data-i18n'));
   });
-}
-
-function updateStats() {
-  const c={};OPTS.forEach(s=>c[s]=0);
-  data.forEach(r=>{if(c[r.status]!==undefined)c[r.status]++;});
-  document.getElementById('stats').innerHTML=`
-    <div class="stat"><div class="stat-n">${data.length}</div><div class="stat-l">Total</div></div>
-    <div class="stat"><div class="stat-n" style="color:#1D4ED8">${c['Nouveau']}</div><div class="stat-l">Nouveau</div></div>
-    <div class="stat"><div class="stat-n" style="color:#166534">${c['Appelé']}</div><div class="stat-l">Appelé</div></div>
-    <div class="stat"><div class="stat-n" style="color:#92400E">${c['Chaud']}</div><div class="stat-l">Chaud</div></div>
-    <div class="stat"><div class="stat-n" style="color:#065F46">${c['RDV']+c['Follow-up']}</div><div class="stat-l">RDV / Suivi</div></div>
-  `;
-}
-
-function render() {
-  const rows = getFiltered();
-  document.getElementById('count').textContent = `${rows.length} prospect${rows.length>1?'s':''} affichés`;
-  const tb = document.getElementById('tbody');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="9" class="empty">Aucun résultat</td></tr>`; return; }
-  tb.innerHTML = rows.map(r=>`
-    <tr>
-      <td><div class="co-name">${r.company}<span class="co-region ${RCLS[r.region]||'rqc'}">${r.region}</span></div></td>
-      <td><div class="contact-name">${r.contact||'—'}</div><div class="contact-title">${r.title||''}</div></td>
-      <td class="phone"><a href="tel:${r.phone}">${r.phone||'—'}</a></td>
-      <td class="email-cell">${r.email?`<a href="mailto:${r.email}">${r.email}</a>`:''}</td>
-      <td class="addr">${r.address||''}</td>
-      <td>
-        <select class="status-sel" data-id="${r.id}">
-          ${OPTS.map(o=>`<option value="${o}"${r.status===o?' selected':''}>${o}</option>`).join('')}
-        </select>
-        <span class="badge ${BADGE[r.status]||'b-new'}" id="badge-${r.id}">${r.status}</span>
-      </td>
-      <td><input type="date" class="date-inp" value="${r.date||''}" data-date="${r.id}"></td>
-      <td class="note-cell">${r.note||''}</td>
-      <td style="text-align:center;white-space:nowrap">
-        <button class="btn-action btn-edit" data-edit="${r.id}" title="Modifier">✏️</button>
-        <button class="btn-action btn-del"  data-del="${r.id}"  title="Supprimer">✕</button>
-      </td>
-    </tr>
-  `).join('');
-
-  tb.querySelectorAll('.status-sel').forEach(sel=>{
-    sel.addEventListener('change',e=>{
-      const id=+e.target.dataset.id;
-      const idx=data.findIndex(x=>x.id===id);
-      data[idx].status=e.target.value;
-      const b=document.getElementById('badge-'+id);
-      b.className='badge '+(BADGE[e.target.value]||'b-new');
-      b.textContent=e.target.value;
-      updateStats();
-      syncToSheets(data[idx].company, e.target.value, data[idx].note, data[idx].date);
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    el.innerHTML = t(el.getAttribute('data-i18n-html'));
+  });
+  document.querySelectorAll('[data-i18n-attr]').forEach(el=>{
+    el.getAttribute('data-i18n-attr').split(',').forEach(pair=>{
+      const [attr,key] = pair.split(':');
+      el.setAttribute(attr, t(key));
     });
   });
-  tb.querySelectorAll('[data-date]').forEach(inp=>{
-    inp.addEventListener('change',e=>{
-      const idx=data.findIndex(x=>x.id===+e.target.dataset.date);
-      if(idx>-1){
-        data[idx].date=e.target.value;
-        syncToSheets(data[idx].company, data[idx].status, data[idx].note, e.target.value);
-      }
-    });
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.lang===currentLang);
   });
-  tb.querySelectorAll('[data-edit]').forEach(btn=>{
-    btn.addEventListener('click',e=>openEditModal(+e.currentTarget.dataset.edit));
-  });
-  tb.querySelectorAll('[data-del]').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      const id=+e.currentTarget.dataset.del;
-      const r=data.find(x=>x.id===id);
-      if(confirm(`Supprimer "${r.company}" ?`)){
-        data=data.filter(x=>x.id!==id);
-        updateStats(); render();
-      }
-    });
-  });
+  const btn = document.getElementById('formBtn');
+  if(btn && !btn.disabled) btn.textContent = t('contact.send');
 }
 
-function sortBy(col) {
-  if(sortCol===col)sortDir*=-1; else{sortCol=col;sortDir=1;}
-  render();
+function setLang(lang){
+  currentLang = lang === 'fr' ? 'fr' : 'en';
+  localStorage.setItem('rg_lang', currentLang);
+  applyStaticI18n();
+  loadContent(currentLang);
 }
 
-// ── MODAL ──────────────────────────────────────────
-function openModal() {
-  editingId=null;
-  document.getElementById('modal-title-text').textContent='Nouveau prospect';
-  document.getElementById('btn-save-modal').textContent='+ Ajouter';
-  ['f-company','f-contact','f-title','f-phone','f-email','f-address','f-date','f-note'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-region').value='QC';
-  document.getElementById('f-status').value='Nouveau';
-  document.getElementById('overlay').classList.add('active');
-  document.getElementById('f-company').focus();
-}
-function openEditModal(id) {
-  const r=data.find(x=>x.id===id); if(!r)return;
-  editingId=id;
-  document.getElementById('modal-title-text').textContent='Modifier le prospect';
-  document.getElementById('btn-save-modal').textContent='Enregistrer';
-  document.getElementById('f-company').value=r.company;
-  document.getElementById('f-contact').value=r.contact;
-  document.getElementById('f-title').value=r.title;
-  document.getElementById('f-phone').value=r.phone;
-  document.getElementById('f-email').value=r.email;
-  document.getElementById('f-address').value=r.address;
-  document.getElementById('f-region').value=r.region;
-  document.getElementById('f-status').value=r.status;
-  document.getElementById('f-date').value=r.date;
-  document.getElementById('f-note').value=r.note;
-  document.getElementById('overlay').classList.add('active');
-}
-function closeModal() {
-  document.getElementById('overlay').classList.remove('active');
-  editingId=null;
-}
-function closeIfBg(e){if(e.target===document.getElementById('overlay'))closeModal();}
-
-function saveProspect() {
-  const company=document.getElementById('f-company').value.trim();
-  if(!company){document.getElementById('f-company').style.borderColor='#EF4444';document.getElementById('f-company').focus();return;}
-  document.getElementById('f-company').style.borderColor='';
-  const fields={
-    company,
-    contact:document.getElementById('f-contact').value.trim()||'—',
-    title:  document.getElementById('f-title').value.trim(),
-    phone:  document.getElementById('f-phone').value.trim()||'—',
-    email:  document.getElementById('f-email').value.trim(),
-    address:document.getElementById('f-address').value.trim(),
-    region: document.getElementById('f-region').value,
-    status: document.getElementById('f-status').value,
-    date:   document.getElementById('f-date').value,
-    note:   document.getElementById('f-note').value.trim(),
-  };
-  if(editingId!==null){
-    const idx=data.findIndex(x=>x.id===editingId);
-    if(idx>-1)data[idx]={...data[idx],...fields};
-  } else {
-    data.unshift({...fields,id:nextId++});
-  }
-  closeModal(); updateStats(); render(); showSaved();
-}
-
-function showSaved(msg='✅ Sauvegardé localement') {
-  const el=document.getElementById('save-indicator');
-  el.textContent=msg;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3000);
-}
-
-// ── SYNC STATUS TO GOOGLE SHEETS ──────────────────
-async function syncToSheets(company, status, note='', date='') {
-  try {
-    const params = new URLSearchParams({
-      action: 'update',
-      company: company,
-      status: status,
-      note: note,
-      date: date
-    });
-    const res = await fetch(API_URL + '?' + params.toString());
+// ---------- Dynamic content (services + FAQ) from D1-backed API ----------
+async function loadContent(lang){
+  try{
+    const res = await fetch('/api/content?lang='+encodeURIComponent(lang));
+    if(!res.ok) throw new Error('content fetch failed');
     const data = await res.json();
-    if (data.success) {
-      showSaved('✅ Synchronisé avec Google Sheets');
-    } else {
-      showSaved('⚠️ Erreur de synchronisation');
-    }
-  } catch(e) {
-    showSaved('⚠️ Sauvegardé localement (sync échouée)');
+    renderServices(data.services||[]);
+    renderFaqs(data.faqs||[]);
+  }catch(err){
+    console.warn('Could not load dynamic content, keeping static fallback.', err);
   }
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-document.getElementById('search').addEventListener('input',render);
-document.getElementById('filter-status').addEventListener('change',render);
-document.getElementById('filter-region').addEventListener('change',render);
+function renderServices(services){
+  const grid = document.getElementById('svcGrid');
+  if(!services.length) return;
+  grid.innerHTML = services.map(s=>{
+    const tag = document.createElement('div');
+    const linkAttrs = s.link ? ` href="${s.link}"` : '';
+    const linkLine = s.link ? `<span class="svc-link">${escapeHtml(s.linkLabel||'')}</span>` : '';
+    const wrapTag = s.link ? 'a' : 'div';
+    return `<${wrapTag} class="svc-card" data-cat="${escapeHtml(s.cat)}"${linkAttrs}>`+
+      `<div class="svc-icon">${escapeHtml(s.icon)}</div>`+
+      `<h3>${escapeHtml(s.title)}</h3>`+
+      `<p>${escapeHtml(s.desc)}</p>`+
+      `<span class="svc-tag">${escapeHtml(s.tag)}</span>${linkLine}`+
+      `</${wrapTag}>`;
+  }).join('');
+  const activeCat = document.querySelector('.cat-btn.active');
+  const cat = activeCat ? activeCat.dataset.cat : 'all';
+  document.querySelectorAll('#svcGrid .svc-card').forEach(c=>{
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';
+  });
+  const select = document.getElementById('svcSelect');
+  if(select){
+    const current = select.value;
+    select.innerHTML = `<option value="" data-i18n="contact.svcDefault">${t('contact.svcDefault')}</option>` +
+      services.map(s=>`<option value="${escapeHtml(s.titleEn||s.title)}">${escapeHtml(s.title)}</option>`).join('');
+    if([...select.options].some(o=>o.value===current)) select.value = current;
+  }
+}
 
-// ── AUTO-REFRESH toutes les 5 minutes ─────────────
-loadFromSheets();
-setInterval(loadFromSheets, 5 * 60 * 1000);
+function renderFaqs(faqs){
+  const list = document.getElementById('faqList');
+  if(!faqs.length) return;
+  list.innerHTML = faqs.map((f,i)=>
+    `<div class="faq-item${i===0?' open':''}"><button class="faq-btn" onclick="toggleFaq(this)"><span>${escapeHtml(f.question)}</span><span class="faq-icon">+</span></button><div class="faq-body"><p>${escapeHtml(f.answer)}</p></div></div>`
+  ).join('');
+}
+
+function escapeHtml(str){
+  return String(str==null?'':str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Service filter
+function filterSvc(btn, cat){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#svcGrid .svc-card').forEach(c=>{
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';
+  });
+}
+
+// FAQ accordion
+function toggleFaq(btn){
+  var item=btn.closest('.faq-item');
+  var isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// Contact form — submits to the Cloudflare Pages Function at /api/contact
+document.getElementById('contactForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const form = this;
+  const d = new FormData(form);
+  const name=d.get('name'), email=d.get('email'), service=d.get('service'), message=d.get('message');
+  const msgBox = document.getElementById('formMsg');
+  const btn = document.getElementById('formBtn');
+  msgBox.className = 'form-msg';
+
+  if(!name||!email||!message){
+    msgBox.textContent = t('contact.fillMsg');
+    msgBox.classList.add('show','err');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = t('contact.sending');
+  try{
+    const res = await fetch('/api/contact', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name,email,service,message,lang:currentLang})
+    });
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok || !data.ok) throw new Error(data.error||'Request failed');
+    btn.textContent = t('contact.sent');
+    msgBox.textContent = t('contact.successMsg');
+    msgBox.classList.add('show','ok');
+    form.reset();
+    setTimeout(()=>{ btn.disabled=false; btn.textContent=t('contact.send'); },2500);
+  }catch(err){
+    btn.disabled = false;
+    btn.textContent = t('contact.send');
+    msgBox.textContent = t('contact.errorMsg');
+    msgBox.classList.add('show','err');
+  }
+});
+
+// Init
+applyStaticI18n();
+loadContent(currentLang);
 </script>
 </body>
 </html>

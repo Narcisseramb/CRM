@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Rambelson Global — Admin</title>
+<style>
+:root{--ink:#10312E;--ink-soft:#39544F;--paper:#F3F6F4;--card:#FFFFFF;--vanilla:#C7952F;--vanilla-soft:#F0E4C8;--border:#D8E0DC;--muted:#7A9490;}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.1rem;margin:0}
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+#loginBox{max-width:360px;margin:80px auto;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px}
+#loginBox input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin:10px 0;font-size:.9rem}
+#loginBox button,button.primary{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:.85rem}
+#loginErr{color:#a12e2e;font-size:.8rem;min-height:1em}
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab-btn{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:7px 16px;font-size:.8rem;cursor:pointer;color:var(--muted)}
+.tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;overflow-x:auto}
+.panel.active{display:block}
+table{border-collapse:collapse;width:100%;font-size:.82rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.msg{max-width:320px;white-space:pre-wrap}
+.del-btn{background:#fbe7e7;color:#a12e2e;border:none;border-radius:6px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+.summary{display:flex;gap:24px;margin-bottom:16px}
+.summary div strong{display:block;font-size:1.4rem}
+.summary div span{font-size:.75rem;color:var(--muted)}
+.svc-form,.faq-form{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.svc-form input,.svc-form textarea,.faq-form input,.faq-form textarea{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit}
+.svc-form label,.faq-form label{font-size:.7rem;color:var(--muted);display:block;margin-bottom:2px}
+.full{grid-column:1/-1}
+.row-actions{display:flex;gap:8px;grid-column:1/-1}
+.save-btn{background:var(--ink);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer}
+.add-btn{background:var(--vanilla);color:#4a3410;border:none;border-radius:8px;padding:10px 16px;font-size:.85rem;cursor:pointer;margin-bottom:16px}
+.hint{font-size:.75rem;color:var(--muted);margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<div id="loginBox">
+  <h2 style="margin-top:0">Admin sign-in</h2>
+  <p class="hint">Enter the admin token configured as the <code>ADMIN_TOKEN</code> secret.</p>
+  <input type="password" id="tokenInput" placeholder="Admin token" autocomplete="off">
+  <button onclick="login()">Sign in</button>
+  <div id="loginErr"></div>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <h1>Rambelson Global — Admin</h1>
+    <button onclick="logout()" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer">Sign out</button>
+  </header>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="leads" onclick="showTab('leads')">Leads</button>
+      <button class="tab-btn" data-tab="quiz" onclick="showTab('quiz')">Quiz results</button>
+      <button class="tab-btn" data-tab="services" onclick="showTab('services')">Services</button>
+      <button class="tab-btn" data-tab="faqs" onclick="showTab('faqs')">FAQ</button>
+    </div>
+
+    <div class="panel active" id="panel-leads">
+      <table><thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Service</th><th>Lang</th><th>Message</th><th></th></tr></thead><tbody id="leadsBody"></tbody></table>
+    </div>
+
+    <div class="panel" id="panel-quiz">
+      <div class="summary">
+        <div><strong id="quizCount">–</strong><span>attempts</span></div>
+        <div><strong id="quizAvg">–</strong><span>average score</span></div>
+      </div>
+      <table><thead><tr><th>Date</th><th>Score</th><th>Correct</th><th>First-try</th></tr></thead><tbody id="quizBody"></tbody></table>
+    </div>
+
+    <div class="panel" id="panel-services">
+      <button class="add-btn" onclick="addServiceForm()">+ Add service</button>
+      <div id="servicesList"></div>
+    </div>
+
+    <div class="panel" id="panel-faqs">
+      <button class="add-btn" onclick="addFaqForm()">+ Add FAQ</button>
+      <div id="faqsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let TOKEN = sessionStorage.getItem('rg_admin_token') || '';
+
+function authHeaders(){ return {'Authorization':'Bearer '+TOKEN}; }
+
+async function login(){
+  const val = document.getElementById('tokenInput').value.trim();
+  if(!val) return;
+  TOKEN = val;
+  const res = await fetch('/api/admin/leads', {headers:authHeaders()});
+  if(res.status===401){
+    document.getElementById('loginErr').textContent = 'Invalid token.';
+    TOKEN='';
+    return;
+  }
+  sessionStorage.setItem('rg_admin_token', TOKEN);
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadAll();
+}
+
+function logout(){
+  sessionStorage.removeItem('rg_admin_token');
+  TOKEN='';
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginBox').style.display='block';
+}
+
+function showTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+tab));
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function loadAll(){
+  loadLeads(); loadQuiz(); loadServices(); loadFaqs();
+}
+
+async function loadLeads(){
+  const res = await fetch('/api/admin/leads', {headers:authHeaders()});
+  const data = await res.json();
+  document.getElementById('leadsBody').innerHTML = (data.leads||[]).map(l=>
+    `<tr><td>${esc(l.created_at)}</td><td>${esc(l.name)}</td><td>${esc(l.email)}</td><td>${esc(l.service)}</td><td>${esc(l.lang)}</td><td class="msg">${esc(l.message)}</td>`+
+    `<td><button class="del-btn" onclick="delLead(${l.id})">Delete</button></td></tr>`
+  ).join('') || '<tr><td colspan="7">No leads yet.</td></tr>';
+}
+
+async function delLead(id){
+  if(!confirm('Delete this lead?')) return;
+  await fetch('/api/admin/leads/'+id, {method:'DELETE', headers:authHeaders()});
+  loadLeads();
+}
+
+async function loadQuiz(){
+  const res = await fetch('/api/admin/quiz-results', {headers:authHeaders()});
+  const data = await res.json();
+  document.getElementById('quizCount').textContent = data.summary.count;
+  document.getElementById('quizAvg').textContent = data.summary.avgPct + '%';
+  document.getElementById('quizBody').innerHTML = (data.results||[]).map(r=>
+    `<tr><td>${esc(r.created_at)}</td><td>${r.score}/${r.max_score}</td><td>${r.correct_count}/${r.total_questions}</td><td>${r.first_try_count}</td></tr>`
+  ).join('') || '<tr><td colspan="4">No quiz attempts yet.</td></tr>';
+}
+
+// ---- Services ----
+function svcFormHtml(s){
+  s = s || {id:'', sort_order:0, cat:'language', icon:'✦', title_en:'', desc_en:'', tag_en:'', title_fr:'', desc_fr:'', tag_fr:'', link:'', link_label_en:'', link_label_fr:'', active:1};
+  return `<div class="svc-form" data-id="${s.id}">
+    <div><label>Category (language/business/digital/travel)</label><input class="f-cat" value="${esc(s.cat)}"></div>
+    <div><label>Icon (emoji)</label><input class="f-icon" value="${esc(s.icon)}"></div>
+    <div><label>Sort order</label><input class="f-order" type="number" value="${s.sort_order}"></div>
+    <div><label>Active</label><input class="f-active" type="checkbox" ${s.active?'checked':''}></div>
+    <div><label>Title (EN)</label><input class="f-title-en" value="${esc(s.title_en)}"></div>
+    <div><label>Title (FR)</label><input class="f-title-fr" value="${esc(s.title_fr)}"></div>
+    <div><label>Description (EN)</label><textarea class="f-desc-en" rows="2">${esc(s.desc_en)}</textarea></div>
+    <div><label>Description (FR)</label><textarea class="f-desc-fr" rows="2">${esc(s.desc_fr)}</textarea></div>
+    <div><label>Tag (EN)</label><input class="f-tag-en" value="${esc(s.tag_en)}"></div>
+    <div><label>Tag (FR)</label><input class="f-tag-fr" value="${esc(s.tag_fr)}"></div>
+    <div><label>Link (optional URL)</label><input class="f-link" value="${esc(s.link||'')}"></div>
+    <div><label>Link label EN / FR</label><div style="display:flex;gap:6px"><input class="f-link-en" value="${esc(s.link_label_en||'')}"><input class="f-link-fr" value="${esc(s.link_label_fr||'')}"></div></div>
+    <div class="row-actions">
+      <button class="save-btn" onclick="saveService(this)">Save</button>
+      ${s.id?`<button class="del-btn" onclick="delService(${s.id})">Delete</button>`:''}
+    </div>
+  </div>`;
+}
+
+async function loadServices(){
+  const res = await fetch('/api/admin/services', {headers:authHeaders()});
+  const data = await res.json();
+  document.getElementById('servicesList').innerHTML = (data.services||[]).map(svcFormHtml).join('');
+}
+
+function addServiceForm(){
+  document.getElementById('servicesList').insertAdjacentHTML('afterbegin', svcFormHtml());
+}
+
+async function saveService(btn){
+  const f = btn.closest('.svc-form');
+  const id = f.dataset.id;
+  const payload = {
+    cat: f.querySelector('.f-cat').value.trim(),
+    icon: f.querySelector('.f-icon').value.trim(),
+    sort_order: Number(f.querySelector('.f-order').value)||0,
+    active: f.querySelector('.f-active').checked,
+    title_en: f.querySelector('.f-title-en').value.trim(),
+    title_fr: f.querySelector('.f-title-fr').value.trim(),
+    desc_en: f.querySelector('.f-desc-en').value.trim(),
+    desc_fr: f.querySelector('.f-desc-fr').value.trim(),
+    tag_en: f.querySelector('.f-tag-en').value.trim(),
+    tag_fr: f.querySelector('.f-tag-fr').value.trim(),
+    link: f.querySelector('.f-link').value.trim() || null,
+    link_label_en: f.querySelector('.f-link-en').value.trim() || null,
+    link_label_fr: f.querySelector('.f-link-fr').value.trim() || null,
+  };
+  if(id){
+    await fetch('/api/admin/services/'+id, {method:'PUT', headers:{...authHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  }else{
+    await fetch('/api/admin/services', {method:'POST', headers:{...authHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  }
+  loadServices();
+}
+
+async function delService(id){
+  if(!confirm('Delete this service?')) return;
+  await fetch('/api/admin/services/'+id, {method:'DELETE', headers:authHeaders()});
+  loadServices();
+}
+
+// ---- FAQs ----
+function faqFormHtml(f){
+  f = f || {id:'', sort_order:0, question_en:'', answer_en:'', question_fr:'', answer_fr:'', active:1};
+  return `<div class="faq-form" data-id="${f.id}">
+    <div><label>Sort order</label><input class="f-order" type="number" value="${f.sort_order}"></div>
+    <div><label>Active</label><input class="f-active" type="checkbox" ${f.active?'checked':''}></div>
+    <div><label>Question (EN)</label><input class="f-q-en" value="${esc(f.question_en)}"></div>
+    <div><label>Question (FR)</label><input class="f-q-fr" value="${esc(f.question_fr)}"></div>
+    <div><label>Answer (EN)</label><textarea class="f-a-en" rows="2">${esc(f.answer_en)}</textarea></div>
+    <div><label>Answer (FR)</label><textarea class="f-a-fr" rows="2">${esc(f.answer_fr)}</textarea></div>
+    <div class="row-actions">
+      <button class="save-btn" onclick="saveFaq(this)">Save</button>
+      ${f.id?`<button class="del-btn" onclick="delFaq(${f.id})">Delete</button>`:''}
+    </div>
+  </div>`;
+}
+
+async function loadFaqs(){
+  const res = await fetch('/api/admin/faqs', {headers:authHeaders()});
+  const data = await res.json();
+  document.getElementById('faqsList').innerHTML = (data.faqs||[]).map(faqFormHtml).join('');
+}
+
+function addFaqForm(){
+  document.getElementById('faqsList').insertAdjacentHTML('afterbegin', faqFormHtml());
+}
+
+async function saveFaq(btn){
+  const f = btn.closest('.faq-form');
+  const id = f.dataset.id;
+  const payload = {
+    sort_order: Number(f.querySelector('.f-order').value)||0,
+    active: f.querySelector('.f-active').checked,
+    question_en: f.querySelector('.f-q-en').value.trim(),
+    question_fr: f.querySelector('.f-q-fr').value.trim(),
+    answer_en: f.querySelector('.f-a-en').value.trim(),
+    answer_fr: f.querySelector('.f-a-fr').value.trim(),
+  };
+  if(id){
+    await fetch('/api/admin/faqs/'+id, {method:'PUT', headers:{...authHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  }else{
+    await fetch('/api/admin/faqs', {method:'POST', headers:{...authHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  }
+  loadFaqs();
+}
+
+async function delFaq(id){
+  if(!confirm('Delete this FAQ?')) return;
+  await fetch('/api/admin/faqs/'+id, {method:'DELETE', headers:authHeaders()});
+  loadFaqs();
+}
+
+if(TOKEN){
+  fetch('/api/admin/leads', {headers:authHeaders()}).then(res=>{
+    if(res.ok){
+      document.getElementById('loginBox').style.display='none';
+      document.getElementById('app').style.display='block';
+      loadAll();
+    }
+  });
+}
+</script>
+</body>
+</html>
