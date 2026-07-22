@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Try Malagasy — Free Sample Quiz · Rambelson Global</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#10312E; --ink-soft:#39544F; --paper:#F3F6F4; --card:#FFFFFF;
+    --gold:#C7952F; --gold-soft:#F0E4C8; --line:#D8E0DC;
+    --ok:#1E8449; --ok-soft:#E4F3EA; --bad:#C0392B; --bad-soft:#FBEAE7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px}
+  h1,h2{font-family:'Fraunces',serif;font-weight:600}
+  .brand{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:6px}
+  .brand span{color:var(--gold)}
+  .sub{font-size:.85rem;color:var(--ink-soft);margin-bottom:26px}
+  .app{width:100%;max-width:620px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px;box-shadow:0 8px 24px rgba(16,49,46,.06)}
+
+  /* progress */
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:.85rem;color:var(--ink-soft)}
+  .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:24px}
+  .bar i{display:block;height:100%;background:var(--gold);border-radius:99px;transition:width .3s;width:0}
+
+  .section-tag{display:inline-block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px}
+  .qtext{font-family:'Fraunces',serif;font-size:1.35rem;line-height:1.35;margin-bottom:6px}
+  .qhint{font-size:.88rem;color:var(--ink-soft);margin-bottom:20px;font-weight:300}
+
+  /* attempts dots — signature */
+  .attempts{display:flex;gap:8px;align-items:center;margin-bottom:20px}
+  .attempts .lbl{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--gold);transition:all .25s}
+  .dot.used{background:var(--line);transform:scale(.8)}
+
+  .opts{display:grid;gap:10px}
+  .opt{width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-family:'Outfit',sans-serif;font-size:1rem;color:var(--ink);cursor:pointer;transition:border-color .15s, background .15s, transform .1s}
+  .opt:hover:not(:disabled){border-color:var(--gold);transform:translateY(-1px)}
+  .opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .opt:disabled{cursor:default;opacity:.9}
+  .opt.correct{background:var(--ok-soft);border-color:var(--ok);font-weight:500}
+  .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+  .opt.dim{opacity:.45}
+
+  .feedback{margin-top:18px;padding:14px 16px;border-radius:12px;font-size:.95rem;display:none}
+  .feedback.ok{display:block;background:var(--ok-soft);color:var(--ok)}
+  .feedback.retry{display:block;background:var(--gold-soft);color:#7d5c14}
+  .feedback.fail{display:block;background:var(--bad-soft);color:var(--bad)}
+
+  .actions{margin-top:22px;display:flex;justify-content:flex-end}
+  .btn{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:13px 28px;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;transition:background .2s;display:none}
+  .btn:hover{background:var(--ink-soft)}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .btn.show{display:inline-block}
+  .btn.gold{background:var(--gold);color:var(--ink)}
+  .btn.ghost{background:none;border:1.5px solid var(--ink);color:var(--ink)}
+
+  /* start & results */
+  .center{text-align:center}
+  .big{font-size:1.7rem;margin-bottom:12px}
+  .lede{color:var(--ink-soft);font-weight:300;margin-bottom:24px;line-height:1.6}
+  .score-ring{font-family:'Fraunces',serif;font-size:3rem;color:var(--gold);margin:10px 0 2px}
+  .score-sub{color:var(--ink-soft);font-size:.95rem;margin-bottom:24px}
+  .verdict{font-family:'Fraunces',serif;font-size:1.25rem;margin-bottom:24px}
+  table.results{width:100%;border-collapse:collapse;font-size:.88rem;margin-bottom:26px}
+  table.results th{text-align:left;color:var(--ink-soft);font-weight:500;padding:8px 6px;border-bottom:1.5px solid var(--line);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+  table.results td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:500}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)}
+  .pill.bad{background:var(--bad-soft);color:var(--bad)}
+  .tries{color:var(--ink-soft);font-size:.8rem}
+  .res-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .foot{margin-top:28px;font-size:.78rem;color:var(--ink-soft)}
+  .foot a{color:var(--gold)}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="brand">Rambelson<span> Global</span></div>
+<div class="sub">Malagasy — Lesson 1 quiz · Greetings &amp; basics</div>
+
+<div class="app">
+  <!-- START -->
+  <div class="card center" id="startCard">
+    <h2 class="big">Manahoana! 👋</h2>
+    <p class="lede">Curious about Malagasy? Try this free sample quiz from our Lesson 1.<br>
+    <strong>12 questions</strong> covering greetings, vocabulary, pronouns and sentence structure.<br>
+    You have <strong>up to 3 attempts</strong> per question — the fewer tries, the more points:<br>
+    1st try = 3 pts · 2nd = 2 pts · 3rd = 1 pt.</p>
+    <button class="btn gold show" onclick="startQuiz()">Start the quiz</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="card" id="quizCard" style="display:none">
+    <div class="meta"><span id="qCounter"></span><span id="scoreLive"></span></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <span class="section-tag" id="qSection"></span>
+    <div class="qtext" id="qText"></div>
+    <div class="qhint" id="qHint"></div>
+    <div class="attempts"><span class="lbl">Attempts</span><span class="dot" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></div>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="fb"></div>
+    <div class="actions"><button class="btn" id="nextBtn" onclick="nextQ()">Next question →</button></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="card center" id="resultCard" style="display:none">
+    <h2 class="big">Your results</h2>
+    <div class="score-ring" id="finalScore"></div>
+    <div class="score-sub" id="finalSub"></div>
+    <div class="verdict" id="verdict"></div>
+    <table class="results"><thead><tr><th>#</th><th>Question</th><th>Result</th><th>Tries</th></tr></thead><tbody id="resBody"></tbody></table>
+    <div class="res-actions">
+      <button class="btn gold show" onclick="startQuiz()">Retake the quiz</button>
+      <a class="btn ghost show" style="text-decoration:none;display:inline-block" href="index.html#contact">Book a real lesson</a>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Prepared by Narcisse — <a href="https://rambelsonglobal.com" target="_blank" rel="noopener">rambelsonglobal.com</a></div>
+
+<script>
+const QUESTIONS = [
+  { s:"Greetings", q:"What does “Salama!” (or “Manahoana!”) mean?", h:"The word you'll say most in Madagascar.",
+    opts:["Hello","Goodbye","Thank you","Good night"], a:0,
+    ex:"“Salama!” and “Manahoana!” both mean “Hello”." },
+  { s:"Greetings", q:"How do you say “Goodbye” in Malagasy?", h:"",
+    opts:["Salama","Veloma","Vaovao","Faly"], a:1,
+    ex:"“Veloma!” = Goodbye." },
+  { s:"Introducing yourself", q:"“Iza no anaranao?” means…", h:"",
+    opts:["How are you?","Where are you from?","What is your name?","What do you do?"], a:2,
+    ex:"“Iza no anaranao?” = What is your name?" },
+  { s:"Introducing yourself", q:"Your name is Michael. How do you answer “Iza no anaranao?”", h:"Remember the pattern: Name + no anarako.",
+    opts:["Michael no anarako","Anarako no Michael","Iza Michael","Michael ianao"], a:0,
+    ex:"Pattern: [Name] + no anarako → “Michael no anarako.”" },
+  { s:"Small talk", q:"“Inona ny vaovao?” means…", h:"",
+    opts:["What is your name?","What's new? / How are you?","Where do you live?","Are you happy?"], a:1,
+    ex:"“Inona ny vaovao?” = What's new? — the everyday “how are you”." },
+  { s:"Small talk", q:"The usual reply to “Inona ny vaovao?” is…", h:"",
+    opts:["Veloma","Faly mahafantatra","Tsisy (vaovao)","Misotro aho"], a:2,
+    ex:"“Tsisy (vaovao)” = “Nothing (new)” — the standard reply." },
+  { s:"Expression", q:"When you meet someone for the first time, you say…", h:"Think of the handshake picture!",
+    opts:["Tsisy vaovao","Faly mahafantatra!","Iza ianao?","Miasa aho"], a:1,
+    ex:"“Faly mahafantatra!” = Nice to meet you!" },
+  { s:"Vocabulary", q:"What does “misotro” mean?", h:"",
+    opts:["to work","to speak","to drink","to be happy"], a:2,
+    ex:"misotro = to drink · miteny = to speak · miasa = to work · faly = happy." },
+  { s:"Vocabulary", q:"Which word means “to work”?", h:"",
+    opts:["Miasa","Miteny","Misotro","Faly"], a:0,
+    ex:"“Miasa” = to work." },
+  { s:"Pronouns", q:"Which pronoun means “I”?", h:"",
+    opts:["Izy","Ianao","Aho","Izireo"], a:2,
+    ex:"Aho = I · Ianao = you · Izy = he/she · Izireo = they." },
+  { s:"Pronouns", q:"Malagasy has TWO words for “we”. “Isika” is used when…", h:"This is a famous Malagasy subtlety!",
+    opts:["the listener is included (“we, including you”)","the listener is excluded (“we, but not you”)","talking about the past","being very polite"], a:0,
+    ex:"Isika = we INCLUDING you (inclusive) · Izahay = we EXCLUDING you (exclusive)." },
+  { s:"Sentence structure", q:"Using the pattern Predicate + (article) + Subject, how do you say “I am Malagasy”?", h:"The predicate comes FIRST in Malagasy.",
+    opts:["Aho Malagasy","Malagasy aho","Ny Malagasy aho","Aho no Malagasy"], a:1,
+    ex:"Predicate first: “Malagasy aho.” — just like “Amerikana i Michael.”" },
+];
+
+let order = [], idx = 0, attempts = 0, score = 0, record = [], locked = false;
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function startQuiz(){
+  order = QUESTIONS.map((q,i)=>i); // keep pedagogical order
+  idx = 0; score = 0; record = [];
+  document.getElementById('startCard').style.display='none';
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('quizCard').style.display='block';
+  showQ();
+}
+
+function showQ(){
+  const q = QUESTIONS[order[idx]];
+  attempts = 0; locked = false;
+  document.getElementById('qCounter').textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  document.getElementById('scoreLive').textContent = `Score: ${score} pts`;
+  document.getElementById('barFill').style.width = `${(idx)/QUESTIONS.length*100}%`;
+  document.getElementById('qSection').textContent = q.s;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qHint').textContent = q.h;
+  for(let i=1;i<=3;i++) document.getElementById('d'+i).className='dot';
+  const fb = document.getElementById('fb'); fb.className='feedback'; fb.textContent='';
+  document.getElementById('nextBtn').classList.remove('show');
+  const box = document.getElementById('opts'); box.innerHTML='';
+  const mapping = shuffle(q.opts.map((t,i)=>({t,i})));
+  mapping.forEach(({t,i})=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=t; b.dataset.orig=i;
+    b.onclick=()=>answer(b, i===q.a, q);
+    box.appendChild(b);
+  });
+}
+
+function answer(btn, correct, q){
+  if(locked) return;
+  attempts++;
+  document.getElementById('d'+attempts).classList.add('used');
+  const fb = document.getElementById('fb');
+  if(correct){
+    locked = true;
+    btn.classList.add('correct');
+    const pts = attempts===1?3:attempts===2?2:1;
+    score += pts;
+    record.push({q:q.q, ok:true, tries:attempts, pts});
+    fb.className='feedback ok';
+    fb.textContent = `✔ Correct on attempt ${attempts} — +${pts} pt${pts>1?'s':''}. ${q.ex}`;
+    finishQuestion();
+  } else {
+    btn.classList.add('wrong'); btn.disabled = true;
+    if(attempts>=3){
+      locked = true;
+      record.push({q:q.q, ok:false, tries:3, pts:0});
+      // reveal correct
+      document.querySelectorAll('#opts .opt').forEach(o=>{
+        if(parseInt(o.dataset.orig)===q.a) o.classList.add('correct'); else o.classList.add('dim');
+      });
+      fb.className='feedback fail';
+      fb.textContent = `✘ Out of attempts. ${q.ex}`;
+      finishQuestion();
+    } else {
+      fb.className='feedback retry';
+      fb.textContent = `Not quite — try again! (${3-attempts} attempt${3-attempts>1?'s':''} left)`;
+    }
+  }
+  document.getElementById('scoreLive').textContent = `Score: ${score} pts`;
+}
+
+function finishQuestion(){
+  document.querySelectorAll('#opts .opt').forEach(o=>o.disabled=true);
+  const nb = document.getElementById('nextBtn');
+  nb.textContent = idx === QUESTIONS.length-1 ? 'See my results →' : 'Next question →';
+  nb.classList.add('show');
+}
+
+function nextQ(){
+  idx++;
+  if(idx < QUESTIONS.length){ showQ(); }
+  else { showResults(); }
+}
+
+function showResults(){
+  document.getElementById('quizCard').style.display='none';
+  const max = QUESTIONS.length*3;
+  const pct = Math.round(score/max*100);
+  const correctCount = record.filter(r=>r.ok).length;
+  const firstTryCount = record.filter(r=>r.ok && r.tries===1).length;
+  fetch('/api/quiz', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      score, maxScore: max,
+      correctCount, totalQuestions: QUESTIONS.length,
+      firstTryCount
+    })
+  }).catch(()=>{ /* best-effort — quiz UI already shows the result regardless */ });
+  document.getElementById('finalScore').textContent = `${score} / ${max}`;
+  const firstTry = record.filter(r=>r.ok && r.tries===1).length;
+  const correct = record.filter(r=>r.ok).length;
+  document.getElementById('finalSub').textContent = `${pct}% · ${correct}/${QUESTIONS.length} correct · ${firstTry} on the first try`;
+  let v;
+  if(pct>=85) v = "Tena tsara! Outstanding — imagine what you'd learn in a real lesson. 🌟";
+  else if(pct>=65) v = "Tsara! Solid work — review the missed words and you're there. 👏";
+  else if(pct>=40) v = "Good start! Go through the lesson once more, then retake the quiz. 💪";
+  else v = "Aza kivy — don't give up! This is exactly what lessons are for. 🌱";
+  document.getElementById('verdict').textContent = v;
+  const tb = document.getElementById('resBody'); tb.innerHTML='';
+  record.forEach((r,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td style="text-align:left">${r.q}</td>`+
+      `<td><span class="pill ${r.ok?'ok':'bad'}">${r.ok?`✔ ${r.pts} pt${r.pts>1?'s':''}`:'✘ 0 pt'}</span></td>`+
+      `<td class="tries">${r.tries} ${r.tries>1?'tries':'try'}</td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('resultCard').style.display='block';
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>
